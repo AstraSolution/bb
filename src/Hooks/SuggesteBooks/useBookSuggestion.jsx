@@ -318,12 +318,6 @@ const useBookSuggestion = (CurrentlyViewing) => {
         }
     }, [isLoggedIn, booksFromCategory, booksFromWriters, booksFromPublishers, interestedBooks, interest]);
 
-    console.log(isLoggedIn)
-    console.log(booksFromCategory)
-    console.log(booksFromWriters)
-    console.log(booksFromPublishers)
-    console.log(interest)
-
 
     // ----------------If Top Tear Suggestions has no data----------------
 
