@@ -3,6 +3,7 @@
 import { AuthContext } from "@/providers/AuthProvider";
 import "./Card.css";
 import Link from "next/link";
+import Swal from "sweetalert2";
 import { useContext } from "react";
 import { BsStar, BsStarFill, BsStarHalf } from "react-icons/bs";
 import { FaRegHeart } from "react-icons/fa";
@@ -11,14 +12,18 @@ import useWishListBook from "@/Hooks/wishList/useWishListBook";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { FaHeart } from "react-icons/fa";
 import useOneUser from "@/Hooks/Users/useOneUser";
+import useGetMyCarts from "@/Hooks/Carts/useGetMyCarts";
+
 
 export default function ExchangeCard({ item }) {
+  
+  const { _id, title, cover_image, price, writer, owner_email, stock_limit } = item || {};
+
   const axiosSecure = useAxiosSecure();
   const { user } = useContext(AuthContext);
   const user_email = user?.email;
   const { currentUser } = useOneUser();
-
-  const { _id, title, cover_image, price, writer, owner_email } = item || {};
+  const { refetch: cartRefetch } = useGetMyCarts();
   const [wishListBook, refetch] = useWishListBook();
 
   const filteredData = wishListBook.filter((book) => book.book_id === _id);
@@ -64,6 +69,54 @@ export default function ExchangeCard({ item }) {
       });
   };
 
+  // Handle add to cart
+  const handleCart = () => {
+    const user_name = currentUser?.name;
+    const user_email = currentUser?.email;
+    const book_id = _id;
+    const bookPrice = price;
+    const quantity = 1;
+
+    const addCart = {
+      user_name,
+      user_email,
+      owner_email: owner_email,
+      book_id,
+      unit_price: bookPrice,
+      total_price: bookPrice,
+      quantity,
+      isDeliverd: false,
+      cover_image: cover_image,
+      title: title,
+      stock_limit: stock_limit,
+    };
+    const email = localStorage.getItem("email");
+    axiosSecure
+      .post("/api/v1/carts", addCart)
+      .then((response) => {
+        if (response.status === 200) {
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Add book in the cart.",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          cartRefetch();
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'There was an error!',
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+
   return (
     <div className="l-container md:p-1">
       <div className="b-game-card ">
@@ -72,11 +125,13 @@ export default function ExchangeCard({ item }) {
           style={{ backgroundImage: `url(${item?.cover_image})` }}
         >
           <div className="grid grid-cols-1 items-end justify-end gap-2 card__action">
-            <Link href={`/buyBooks/${item?._id}`}>
-              <button className=" text-white text-center text-xl border mb-2 border-gray-600 border-opacity-30 backdrop-blur-md p-3 bg-black/30 rounded-full">
-                <MdOutlineShoppingCart />
-              </button>
-            </Link>
+
+            <button
+              onClick={handleCart}
+              className=" text-white text-center text-xl border mb-2 border-gray-600 border-opacity-30 backdrop-blur-md p-3 bg-black/30 rounded-full">
+              <MdOutlineShoppingCart />
+            </button>
+
 
             <div>
               {filteredData.length > 0 ? (
@@ -110,53 +165,55 @@ export default function ExchangeCard({ item }) {
         </div>
       </div>
 
-      <div className="px-1">
-        <div className="space-y-1 mt-2.5 pb-1">
-          <h2 className="text-lg font-bold text-[#016961] line-clamp-1">
-            {item?.title}
-          </h2>
-          <p className="text-[13px] text-[#626980] italic line-clamp-1">
-            {" "}
-            <span>-</span> {item?.writer}
-          </p>
-        </div>
-
-        <div className="flex items-center truncate mt-1 text-[#62807b] text-sm">
-          <div className="flex gap-[1px] -mt-[2px] mr-1.5">
-            {Array.from(
-              { length: Math.min(Math.floor(item?.avg_rating), 5) },
-              (_, index) => (
-                <span key={index} className="text-yellow-400">
-                  <BsStarFill />
-                </span>
-              )
-            )}
-            {item?.avg_rating % 1 !== 0 && (
-              <span className="text-yellow-400">
-                <BsStarHalf />{" "}
-              </span>
-            )}
-            {Array.from(
-              { length: Math.max(5 - Math.ceil(item?.avg_rating), 0) },
-              (_, index) => (
-                <span key={index} className="text-gray-400">
-                  <BsStar />
-                </span>
-              )
-            )}
+      <Link href={`/buyBooks/${item?._id}`}>
+        <div className="px-1">
+          <div className="space-y-1 mt-2.5 pb-1">
+            <h2 className="text-lg font-bold text-[#016961] line-clamp-1">
+              {item?.title}
+            </h2>
+            <p className="text-[13px] text-[#626980] italic line-clamp-1">
+              {" "}
+              <span>-</span> {item?.writer}
+            </p>
           </div>
-          <p>
-            {Math.min(item?.avg_rating, 5)} {Math.min(item?.avg_rating, 5) > 1 ? "Ratings" : "Rating"}
-          </p>
-        </div>
 
-        <hr className="hr-card" />
-        <div className="mt-2.5">
-          <p className="text-sm text-[#62807b] line-clamp-3">
-            {item?.description}
-          </p>
+          <div className="flex items-center truncate mt-1 text-[#62807b] text-sm">
+            <div className="flex gap-[1px] -mt-[2px] mr-1.5">
+              {Array.from(
+                { length: Math.min(Math.floor(item?.avg_rating), 5) },
+                (_, index) => (
+                  <span key={index} className="text-yellow-400">
+                    <BsStarFill />
+                  </span>
+                )
+              )}
+              {item?.avg_rating % 1 !== 0 && (
+                <span className="text-yellow-400">
+                  <BsStarHalf />{" "}
+                </span>
+              )}
+              {Array.from(
+                { length: Math.max(5 - Math.ceil(item?.avg_rating), 0) },
+                (_, index) => (
+                  <span key={index} className="text-gray-400">
+                    <BsStar />
+                  </span>
+                )
+              )}
+            </div>
+            <p>
+              {Math.min(item?.avg_rating, 5)} {Math.min(item?.avg_rating, 5) > 1 ? "Ratings" : "Rating"}
+            </p>
+          </div>
+
+          <hr className="hr-card" />
+          <div className="mt-2.5">
+            <p className="text-sm text-[#62807b] line-clamp-3">
+              {item?.description}
+            </p>
+          </div>
         </div>
-      </div>
+      </Link>
     </div>
   );
 }
