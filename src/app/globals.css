@@ -1,0 +1,216 @@
+@import url("https://fonts.googleapis.com/css2?family=Kumar+One+Outline&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.kumar-one-outline {
+  font-family: "Kumar One Outline", system-ui;
+}
+
+.bg {
+  background: url("https://i.ibb.co/DfnH8Vq/boi-binimoy-seamless-pattern.png") repeat;
+  background-repeat: repeat;
+  background-size: 20%;
+}
+
+.bg-50 {
+  background: url("https://i.ibb.co/vwPGFwM/boi-binimoy-seamless-pattern-50.png") repeat;
+  background-repeat: repeat;
+  background-size: 30%;
+}
+
+.bg-50-50 {
+  background: url("https://i.ibb.co/tHMFDx1/boi-binimoy-seamless-pattern-50-50.png") repeat;
+  background-repeat: repeat;
+  background-size: 25%;
+}
+
+.bg-text {
+  background: url("https://i.ibb.co/tHMFDx1/boi-binimoy-seamless-pattern-50-50.png") repeat;
+  background-size: 20%;
+  -webkit-background-clip: text;
+  /* Clip the background to the text */
+  background-clip: text;
+  /* Clip the background to the text */
+  color: transparent;
+  /* Make the text transparent */
+}
+
+@media screen and (max-width: 1200px) {
+  .bg {
+    background-size: 25%;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .bg {
+    background-size: 30%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .bg {
+    background-size: 35%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .bg {
+    background-size: 45%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .bg {
+    background-size: 70%;
+  }
+}
+
+
+.active-link {
+  text-decoration: underline;
+}
+
+
+.parallax {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: -100;
+  transform: translateZ(0);
+}
+
+.curvy-nav {
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 80% 100%, 50% 96%, 20% 100%, 0 90%);
+}
+
+/* styles.css */
+
+.hr {
+  width: 100%;
+  margin: 10px 0;
+  border: none;
+  border-top: 1px solid rgb(210, 225, 228);
+  box-sizing: border-box;
+  margin: 0 10px 0 10px;
+}
+
+.hr-card {
+  width: 100%;
+  margin: 10px 0;
+  border: none;
+  border-top: 1px solid rgb(210, 225, 228);
+  box-sizing: border-box;
+}
+
+.button-color {
+  font: inherit;
+  background: #016961;
+  border-radius: 100vw;
+  cursor: pointer;
+  transition: background-color 250ms;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.button-color:hover,
+.button-color:focus-visible {
+  background: #408a84;
+}
+
+.button-color> :first-child {
+  left: 0;
+  top: 0;
+}
+
+.button-color> :last-child {
+  right: 0;
+  top: 0;
+}
+
+.button-color::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: hsl(200 60% 20%);
+  width: 10%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  inset: 0;
+  margin: auto;
+  opacity: 0;
+  transition: transform 1000ms 200ms, opacity 200ms;
+}
+
+.button-color:active::before {
+  transform: scale(20);
+  opacity: 1;
+  transition: transform 1000ms, opacity 500ms;
+}
+
+.button-color:has(:first-child:active)::before {
+  margin-left: 0;
+}
+
+.button-color:has(:last-child:active)::before {
+  margin-right: 0;
+}
+
+.button-color:has(:first-child:active)::before,
+.button-color:has(:last-child:active)::before {
+  transition: transform 500ms, opacity 250ms;
+}
+
+/* --------------scrollbar css--------------*/
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 9px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #c9ddd8;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #016961;
+  border-radius: 4px;
+  border: 1px solid rgb(101, 163, 157);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Hide default scrollbar buttons */
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+/* Button for scrolling to the top */
+::-webkit-scrollbar-button:start {
+  display: contents;
+  background-color: #ccc;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="black" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>');
+  /* Upward arrow SVG */
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 12px;
+}
+
+/* Button for scrolling to the bottom */
+::-webkit-scrollbar-button:end {
+  display: contents;
+  background-color: #ccc;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="black" d="M6.41 8.59L11 13.17l4.59-4.58L16 10l-6 6-6-6z"/></svg>');
+  /* Downward arrow SVG */
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 12px;
+}

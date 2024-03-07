@@ -1,0 +1,68 @@
+[
+    {
+      "user_name": "admin",
+      "user_email": "admin@gmail.com",
+      "title": "Top 10 Must-Read Books of 2024",
+      "tags": ["Books", "Reading", "Literature"],
+      "category": "Book Recommendations",
+      "body": [
+        "Discover the hottest reads of the year with our curated list of the top 10 must-read books for 2024.",
+        "From gripping thrillers to heartwarming romances, there's something for every reader on this list.",
+        "Explore new worlds and diverse perspectives through the power of storytelling."
+      ],
+      "cover_image": "https://example.com/top-books-2024.jpg"
+    },
+    {
+      "user_name": "admin",
+      "user_email": "admin@gmail.com",
+      "title": "The Rise of Audiobooks: A New Era of Reading",
+      "tags": ["Books", "Audiobooks", "Reading Trends"],
+      "category": "Reading Trends",
+      "body": [
+        "Audiobooks have surged in popularity in recent years, revolutionizing the way people experience literature.",
+        "Discover the benefits of audiobooks and how they are changing the landscape of the publishing industry.",
+        "Explore our recommendations for the best audiobooks to listen to on your next commute or road trip."
+      ],
+      "cover_image": "https://example.com/audiobooks-rise.jpg"
+    },
+    {
+      "user_name": "admin",
+      "user_email": "admin@gmail.com",
+      "title": "Finding Your Next Book: Tips for Choosing the Perfect Read",
+      "tags": ["Books", "Reading", "Book Recommendations"],
+      "category": "Reading Tips",
+      "body": [
+        "With so many books to choose from, finding your next read can be a daunting task.",
+        "Discover helpful tips and strategies for selecting the perfect book based on your interests and preferences.",
+        "From browsing bookstores to seeking recommendations from friends, there are countless ways to find your next literary adventure."
+      ],
+      "cover_image": "https://example.com/finding-next-book.jpg"
+    },
+    {
+      "user_name": "admin",
+      "user_email": "admin@gmail.com",
+      "title": "Exploring Classic Literature: Timeless Masterpieces to Read Today",
+      "tags": ["Books", "Classic Literature", "Reading Lists"],
+      "category": "Literary Classics",
+      "body": [
+        "Classic literature continues to captivate readers with its timeless themes and enduring relevance.",
+        "Embark on a journey through literary history with our curated list of classic masterpieces from around the world.",
+        "From Shakespearean tragedies to Victorian novels, there's a classic for every reader to enjoy."
+      ],
+      "cover_image": "https://example.com/classic-literature.jpg"
+    },
+    {
+      "user_name": "admin",
+      "user_email": "admin@gmail.com",
+      "title": "The Benefits of Book Clubs: Connecting Readers and Building Communities",
+      "tags": ["Books", "Book Clubs", "Community"],
+      "category": "Reading Community",
+      "body": [
+        "Joining a book club offers numerous benefits, from fostering a love of reading to building meaningful connections with fellow bookworms.",
+        "Discover how book clubs bring readers together to discuss literature, share insights, and explore new perspectives.",
+        "Explore our tips for starting your own book club and enhancing your reading experience."
+      ],
+      "cover_image": "https://example.com/book-clubs-benefits.jpg"
+    }
+  ]
+  

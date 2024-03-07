@@ -1,0 +1,123 @@
+{
+  "title": "The Great Gatsby",
+  "writer": "F. Scott Fitzgerald",
+  "description": "a quick brown fox jupms over the lazy dog 120-150 words",
+  "publication_year": 1925,
+  "edition": "First Edition",
+  "language": "English",
+  "publisher": "Scribner",
+  "format": "physical book" / "eBook" / "AudioBook",
+  "cover_type": "Hardcover" / "softcover",
+  "dimensions": {
+    "height": 8.5,
+    "width": 5.5,
+    "depth": 0.8
+  },
+  "size": 1024,
+  "pages": 180,
+  "time_frame": 54965465465468,
+  "tags": [
+    "American literature",
+    "Roaring Twenties"
+  ],
+  "cover_image": "https://example.com/great-gatsby-cover.jpg",
+  "condition": "Good",
+  "exchange_status": "Available",
+  "owner": "User Name",
+  "owner_email": "User email",
+  "phone_number": "+454555565565",
+  "location": {
+    "country": "United States",
+    "city": "New York",
+    "street": "123 Main Street",
+    "address_line": "optional",
+    "zip_code": "1000"
+  }
+}
+
+{
+  "name": "user",
+  "email": "user email",
+  "phone_number": "",
+  "image": "",
+  "gender": "",
+  "profession": "",
+  "date_of_birth": "",
+  "reg_date": "",
+  "location": {
+    "country": "",
+    "city": "",
+    "street": "",
+    "address_line": "",
+    "zip_code": ""
+  },
+  npom
+  "isAdmin": false,
+  "isModerator": false,
+  "isPublisher": false,
+  "isSeller": false,
+  "isUser": true,
+  "interest": [],
+  "isBan": false
+}
+
+{
+  "user_name": "user",
+  "user_email": "user email",
+  "publish_date": "21-jan-2024",
+  "publish_time": "05:30pm",
+  "title": "Title here",
+  "body": "blog body here",
+  "cover_image": "image url",
+}
+
+{
+  "user_name": "user",
+  "user_email": "user email",
+  "publish_date": "21-jan-2024",
+  "publish_time": "05:30pm",
+  "title": "Title here",
+  "body": "blog body here",
+  "cover_image": "image url",
+}
+
+{
+  "owner_name": "owner name",
+  "owner_email": "owner email",
+  "requester_name": "requester name",
+  "requester_email": "requester name",
+  "owner_book_id": "gtg954dfgdfg5f",
+  "requester_book_id": "45gfg4dfghjh5",
+  "req_date": "15/02/2024",
+  "req_time": "5:30pm",
+  "req_message": "hi hello",
+  "status": "status"
+}
+
+
+{
+  "interest": {
+    "category": [
+      "Historical Fiction", 
+      "travel", 
+      "horror",
+    ],
+    "writer": [
+      "65cb31394bac4bbd224la",
+      "65cb31394bac4bbd224f353a",
+      "65cb31394bac4bbd224f353a",
+      "65cb31394bac4bbd224f353a",
+      "65cb31394bac4bbd224f353a",
+    ],
+    "publisher": [
+      "65cb31394bac4bbd224f353a",
+      "fgjndfgjnfdg6654",
+      "65cb31394bac4bbd224f353a",
+    ],
+    "book": [
+      "dfkfj65654654654 ",
+      "djfhskdj541151654",
+      "65cb31394bac4bbd224f353a",
+    ]
+  }
+}

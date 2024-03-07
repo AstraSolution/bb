@@ -1,0 +1,113 @@
+/* Settings */
+:root {
+    --c_0: #000000;
+    --c_1: #353540;
+}
+
+.l-container {
+    padding-top: 20px;
+    position: relative;
+}
+
+/* Basic reset */
+
+@media screen and (max-width: 760px) {}
+
+.b-game-card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding-bottom: 150%;
+    perspective: 1000px;
+}
+
+.b-game-card__cover {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-image: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+    background-size: cover;
+    perspective-origin: 50% 50%;
+    transform-style: preserve-3d;
+    transform-origin: top center;
+    will-change: transform;
+    transform: skewX(.001deg);
+    transition: transform .35s ease-in-out;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.b-game-card__cover::after {
+    display: block;
+    content: '';
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 120%;
+    background: linear-gradient(226deg, rgba(255, 255, 255, 0.225) 0%, rgba(255, 255, 255, 0.225) 35%, rgba(255, 255, 255, 0.125) 42%, rgba(255, 255, 255, 0) 60%);
+    transform: translateY(-20%);
+    will-change: transform;
+    transition: transform .65s cubic-bezier(0.18, 0.9, 0.58, 1);
+}
+
+
+.b-game-card:hover .b-game-card__cover {
+    transform: scale(1.05) translateY(-18px);
+}
+
+.b-game-card:hover .b-game-card__cover::after {
+    transform: translateY(0%);
+}
+
+.b-game-card::before {
+    display: block;
+    content: '';
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    width: 90%;
+    height: 90%;
+    background: rgba(var(--c_0), 0.5);
+    box-shadow: 0 6px 12px 12px rgba(var(--c_0), 0.4);
+    will-change: opacity;
+    transform-origin: top center;
+    transform: skewX(.001deg);
+    transition: transform .35s ease-in-out, opacity .5s ease-in-out;
+}
+
+.b-game-card:hover::before {
+    opacity: 0.6;
+    transform: scale(1.25);
+}
+
+.card__action {
+    position: absolute;
+    aspect-ratio: 1;
+    width: auto;
+    height: auto;
+    bottom: 10px; /* Adjust this value based on your design */
+    right: 10px;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateX(100%); /* Initially move the button to the right of the card */
+    transform-origin: right center; /* Set the transform origin to the right center */
+    transition: transform 0.3s, opacity 0.2s;
+    z-index: 1;
+}
+
+.l-container:hover .card__action {
+    opacity: 1;
+    transform: translateX(0); /* Move the button to its original position */
+}
+
+.card__action:hover {
+    transform: translateX(-10px); /* Add a small leftward translation on hover */
+}

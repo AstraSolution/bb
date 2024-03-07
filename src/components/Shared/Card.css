@@ -1,0 +1,235 @@
+Settings:root {
+  --c_0: #000000;
+  --c_1: #353540;
+}
+
+.l-container {
+  padding-top: 20px;
+  position: relative;
+}
+
+/* Basic reset */
+
+@media screen and (max-width: 760px) {}
+.b-game-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding-bottom: 150%;
+  perspective: 1000px;
+}
+
+.b-game-card__cover {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Remove duplicate property */
+  background-image: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+  background-size: cover;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+  transform-origin: top center;
+  will-change: transform;
+  transform: skewX(.001deg);
+  transition: transform .35s ease-in-out, transform-origin .35s ease-in-out; /* Added transition for transform-origin */
+  border-radius: 5px;
+}
+
+.b-game-card__cover::after {
+  display: block;
+  content: '';
+  position: absolute;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120%;
+  background: linear-gradient(226deg, rgba(255, 255, 255, 0.225) 0%, rgba(255, 255, 255, 0.225) 35%, rgba(255, 255, 255, 0.125) 42%, rgba(255, 255, 255, 0) 60%);
+  transform: translateY(-20%);
+  will-change: transform;
+  transition: transform .65s cubic-bezier(0.18, 0.9, 0.58, 1);
+}
+
+.b-game-card:hover .b-game-card__cover {
+  transform: scale(1.05) translateY(0);
+  transform-origin: bottom center;
+}
+
+.b-game-card:hover .b-game-card__cover::after {
+  transform: translateY(0%);
+}
+
+.b-game-card::before {
+  display: block;
+  content: '';
+  position: absolute;
+  top: 5%;
+  left: 5%;
+  width: 90%;
+  height: 90%;
+  background: rgba(var(--c_0), 0.5);
+  box-shadow: 0 6px 12px 12px rgba(var(--c_0), 0.4);
+  will-change: opacity;
+  transform-origin: top center;
+  transform: skewX(.001deg);
+  transition: transform .35s ease-in-out, opacity .5s ease-in-out;
+}
+
+.b-game-card:hover::before {
+  opacity: 0.6;
+  transform: scale(1.25);
+}
+
+.card__action {
+  position: absolute;
+  aspect-ratio: 1;
+  width: auto;
+  height: auto;
+  bottom: 10px;
+  /* Adjust this value based on your design */
+  right: 10px;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateX(100%);
+  /* Initially move the button to the right of the card */
+  transform-origin: right center;
+  /* Set the transform origin to the right center */
+  transition: transform 0.3s, opacity 0.2s;
+  z-index: 10000;
+}
+
+.l-container:hover .card__action {
+  opacity: 1;
+  transform: translateX(0);
+  /* Move the button to its original position */
+}
+
+.card__action:hover {
+  transform: translateX(-10px);
+  /* Add a small leftward translation on hover */
+}
+
+
+
+/* Book Cover Effect */
+.book-cover-effect::before {
+  content: "";
+  position: absolute;
+  inset: 0px;
+  border-radius: 3px;
+  pointer-events: none;
+  filter: contrast(310%) brightness(100%);
+  box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
+  background: linear-gradient(90deg,
+      rgba(0, 0, 0, 0.118) 0.65%,
+      rgba(255, 255, 255, 0.2) 1.53%,
+      rgba(255, 255, 255, 0.1) 2.38%,
+      rgba(0, 0, 0, 0.05) 3.26%,
+      rgba(255, 255, 255, 0.14) 5.68%,
+      rgba(244, 244, 244, 0) 6.96%);
+}
+
+
+
+/* ----------------price tags---------------- */
+
+/* Variables */
+:root {
+  --price-tag-background: #f05438;
+  --price-tag-color: #fff;
+  --price-tag-height: 30px;
+  --price-tag-corner: 4px;
+  --price-tag-dot-radius: 6px;
+  --price-tag-dot-background: #fff;
+}
+
+/* Styles */
+.price-tag {
+  position: absolute;
+  top: 2%;
+  right: 3%;
+  display: inline-flex;
+  flex-direction: column;
+  height: var(--price-tag-height);
+  margin-left: calc(var(--price-tag-height) / 2);
+  padding: 0 5px 0 10px;
+  color: var(--price-tag-color);
+  border-radius: 0 var(--price-tag-corner) var(--price-tag-corner) 0;
+  background-color: var(--price-tag-background);
+  line-height: 1;
+  justify-content: center;
+  box-shadow: 0 1px 5px #252424;
+  /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);  */
+}
+
+.price-tag::before,
+.price-tag::after {
+  position: absolute;
+  content: '';
+}
+
+.price-tag::before {
+  --price-tag-side: calc(var(--price-tag-height) / 1.428);
+
+  left: calc(-1 * var(--price-tag-side) / 2);
+  width: var(--price-tag-side);
+  height: var(--price-tag-side);
+  transform: rotate(45deg);
+  border-radius: 0 0 0 var(--price-tag-corner);
+  background-color: var(--price-tag-background);
+}
+
+.price-tag::after {
+  z-index: 1;
+  top: 40%;
+  left: calc(-1 * var(--price-tag-height) / 5);
+  width: var(--price-tag-dot-radius);
+  height: var(--price-tag-dot-radius);
+  transform: translate(-50%, -50%) translateX(var(--price-tag-height) / 2);
+  border-radius: var(--price-tag-dot-radius) / 100%;
+  background-color: var(--price-tag-dot-background);
+}
+
+.price-tag__main {
+  font-size: 1.15em;
+  font-weight: bold;
+}
+
+.price-tag__main~* {
+  opacity: 0.85;
+}
+
+.price-tag span {
+  position: relative;
+  z-index: 1;
+}
+
+.price-tag--two-lines {
+  --price-tag-side: calc(var(--price-tag-height) / 1.428 * 2);
+  margin-left: var(--price-tag-height);
+  height: calc(var(--price-tag-height) * 2);
+
+  .price-tag::before {
+    left: calc(-1 * var(--price-tag-side) / 2);
+    width: var(--price-tag-side);
+    height: var(--price-tag-side);
+  }
+
+  .price-tag::after {
+    transform: translate(-50%, -50%) translateX(var(--price-tag-height) / 2) scale(2);
+  }
+}
+
+.price-tag--one-line {
+  flex-direction: row;
+  align-items: center;
+}
+
+.price-tag--one-line span:not(:first-child)::before {
+  content: ', ';
+}
