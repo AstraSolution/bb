@@ -1,6 +1,7 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
 import "./style.css";
+import { useRouter } from 'next/navigation';
 import Link from "next/link";
 import { AuthContext } from "@/providers/AuthProvider";
 import Image from "next/image";
@@ -18,8 +19,14 @@ const Dashboard = ({ children }) => {
   const { currentUser } = useOneUser();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
 
   const { isAdmin, isModerator, isSeller, isPublisher, isUser } = useOneUser();
+
+  const handleLogout = () => {
+    logOut(); 
+    router.push('/');
+  }
 
   const toggleNotification = () => {
     setIsOpen(!isOpen);
@@ -246,15 +253,7 @@ const Dashboard = ({ children }) => {
                 <span className="text">Users</span>
               </Link>
             </li>
-            <li className={pathname == "/dashboard/analytics" ? "active" : ""}>
-              <Link href="#">
-                <i className="bx bxs-doughnut-chart"></i>
-                <span className="text">Analytics</span>
-              </Link>
-            </li>
-            <li
-              className={pathname == "/dashboard/notification" ? "active" : ""}
-            >
+            <li className={pathname == "/dashboard/notification" ? "active" : ""}>
               <Link href="/dashboard/notification">
                 <i className="bx bxs-message-dots"></i>
                 <span className="text">Notification</span>
@@ -469,20 +468,11 @@ const Dashboard = ({ children }) => {
         )}
 
         <ul className="side-menu">
-          <li>
-            <Link href="#">
-              <i className="bx bxs-cog"></i>
-              <span className="text">Settings</span>
-            </Link>
-          </li>
-          <li>
-            <Link href="#" className="logout">
-              <i className="bx bxs-log-out-circle"></i>
-              <button onClick={logOut}>
-                <span className="text">Logout</span>
-              </button>
-            </Link>
-          </li>
+        <i className="bx bxs-log-out-circle logout text-red-500"></i>
+          <button onClick={handleLogout}>
+
+            <span className="text text-red-500">Logout</span>
+          </button>
         </ul>
       </section>
 

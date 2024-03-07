@@ -1,10 +1,14 @@
 "use client";
 
+import { AuthContext } from "@/providers/AuthProvider";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useContext } from "react";
+
 
 const Navlinks = () => {
   const currentPath = usePathname();
+  const { isLoggedIn } = useContext(AuthContext);
 
   const navlinks = (
     <div className="md:flex items-center justify-around md:gap-8 lg:gap-10">
@@ -38,18 +42,21 @@ const Navlinks = () => {
       >
         <li>Contact</li>
       </Link>
-      <Link
-        className={` ${currentPath === "/dashboard" && "active-link"}`}
-        href="/dashboard"
-      >
-        <li>Dashboard</li>
-      </Link>
-      <Link
-        className="border-2 border-white rounded-full p-2"
-        href="/joinUs"
-      >
-        <li>Join Now</li>
-      </Link>
+      {isLoggedIn ? (
+        <Link
+          className={` ${currentPath === "/dashboard" && "active-link"}`}
+          href="/dashboard"
+        >
+          <li>Dashboard</li>
+        </Link>
+      ) : (
+        <Link
+          className="border-2 border-white rounded-full p-2"
+          href="/joinUs"
+        >
+          <li>Join Now</li>
+        </Link>
+      )}
     </div>
   );
   return (
