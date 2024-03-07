@@ -28,10 +28,7 @@ const Navend = () => {
     myCarts = myCarts.slice(0, 3);
   }
 
-  console.log(currentUser);
-
   const { isFirstLogin } = currentUser
-  console.log(isFirstLogin);
 
   useEffect(() => {
     if (currentUser.isFirstLogin) {
@@ -50,7 +47,6 @@ const Navend = () => {
     const updateUserInformation = {
       isFirstLogin: false,
     };
-
     try {
       const response = await axiosSecure.patch(`/api/v1/users/${currentUser._id}`, updateUserInformation);
       if (response.data) {
