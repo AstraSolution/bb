@@ -74,7 +74,7 @@ const Search = () => {
           <div className="absolute bg-50 border border-teal-800 rounded-lg w-full mt-1 max-h-96 overflow-x-scroll">
             {searchBooks?.map((book) => (
               <div key={book?._id} onClick={() => handleResultClick(book?._id)}>
-                <div className="flex items-center gap-3 bg-teal-100/30  hover:bg-teal-100/60 py-2 px-5 rounded-lg border-b">
+                <div className="flex items-center gap-3 bg-teal-100/30 hover:bg-teal-100/60 py-2 px-5 rounded-lg border-b cursor-pointer">
                   <div>
                     <Image
                       width={40}

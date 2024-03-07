@@ -3,6 +3,7 @@
 import { AuthContext } from "@/providers/AuthProvider";
 import "./Card.css";
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
 import Swal from "sweetalert2";
 import { useContext } from "react";
 import { BsStar, BsStarFill, BsStarHalf } from "react-icons/bs";
@@ -16,11 +17,12 @@ import useGetMyCarts from "@/Hooks/Carts/useGetMyCarts";
 
 
 export default function ExchangeCard({ item }) {
-  
+
   const { _id, title, cover_image, price, writer, owner_email, stock_limit } = item || {};
 
   const axiosSecure = useAxiosSecure();
-  const { user } = useContext(AuthContext);
+  const router = useRouter();
+  const { user, isLoggedIn } = useContext(AuthContext);
   const user_email = user?.email;
   const { currentUser } = useOneUser();
   const { refetch: cartRefetch } = useGetMyCarts();
@@ -28,7 +30,23 @@ export default function ExchangeCard({ item }) {
 
   const filteredData = wishListBook.filter((book) => book.book_id === _id);
 
+
   const handleAddToWishlist = () => {
+    if (!isLoggedIn) {
+      Swal.fire({
+        icon: 'info',
+        title: 'Login Required',
+        text: 'You need to log in to add items to your wishlist.',
+        showCancelButton: true,
+        confirmButtonText: 'Login',
+        cancelButtonText: 'Cancel',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          router.push('/joinUs');
+        }
+      });
+      return; 
+    }
     const user_name = currentUser?.name;
     const quantity = 1;
 
@@ -71,6 +89,23 @@ export default function ExchangeCard({ item }) {
 
   // Handle add to cart
   const handleCart = () => {
+
+    if (!isLoggedIn) {
+      Swal.fire({
+        icon: 'info',
+        title: 'Login Required',
+        text: 'You need to log in to add items to your wishlist.',
+        showCancelButton: true,
+        confirmButtonText: 'Login',
+        cancelButtonText: 'Cancel',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          router.push('/joinUs');
+        }
+      });
+      return; 
+    }
+
     const user_name = currentUser?.name;
     const user_email = currentUser?.email;
     const book_id = _id;
@@ -90,7 +125,7 @@ export default function ExchangeCard({ item }) {
       title: title,
       stock_limit: stock_limit,
     };
-    const email = localStorage.getItem("email");
+
     axiosSecure
       .post("/api/v1/carts", addCart)
       .then((response) => {
