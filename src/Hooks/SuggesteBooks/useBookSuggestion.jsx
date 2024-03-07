@@ -427,7 +427,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
         }
     }, [relatedBooksLoading, currentlyViewingRelatedLoading, currentlyViewingBookLoading]);
 
-    return { topTearSuggestions, currentlyViewingRelatedBooks, interestedBooks, booksFromCategory, booksFromWriters, booksFromPublishers, suggestionsLoading, interestedBooksRelatedBooks, interestedBooksRelatedBooksLoading, relatedLoading };
+    return { topTearSuggestions, currentlyViewingRelatedBooks, currentlyViewingRelatedLoading, interestedBooks, booksFromCategory, booksFromWriters, booksFromPublishers, suggestionsLoading, interestedBooksRelatedBooks, interestedBooksRelatedBooksLoading, relatedLoading };
 };
 
 export default useBookSuggestion;

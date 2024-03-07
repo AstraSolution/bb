@@ -146,11 +146,14 @@ const BuyBookDetails = () => {
         {/* book img and information section */}
         <div className="flex flex-col-reverse lg:flex-row items-start lg:mt-40 gap-3 lg:gap-7">
           {/* Related section */}
-          <div className="w-full bg-50-50 mx-auto lg:w-fit h-[500px] px-3 overflow-y-scroll border border-teal-800 rounded-lg">
-            <RelatedBooks CurrentlyViewing={book._id}> </RelatedBooks>
+          <div>
+            <h2 className="text-2xl md:text-3xl text-[#016961] font-bold text-nowrap -mt-12 mb-3">Related Books</h2>
+            <div className="w-full related-bg mx-auto lg:w-fit h-[500px] px-3 overflow-y-scroll border border-gray-200 rounded-lg">
+              <RelatedBooks CurrentlyViewing={book._id}> </RelatedBooks>
+            </div>
           </div>
 
-          <div className="relative flex flex-col lg:flex-row-reverse justify-center p-5 bg-[#016961] rounded-lg w-full">
+          <div className="relative flex flex-col lg:flex-row-reverse justify-center p-5 buy-book-bg rounded-lg w-full">
             {/* Book Image */}
             <div className="w-full lg:w-2/5 mb-4 lg:mb-0">
               <Image
@@ -163,7 +166,7 @@ const BuyBookDetails = () => {
             </div>
 
             {/* Book Information */}
-            <div className="lg:px-10 bg text-white w-full lg:w-3/5">
+            <div className="lg:px-10 text-white w-full lg:w-3/5">
               <h2 className="text-4xl">{book?.title}</h2>
               <p className="text-xs">
                 by <span className="font-bold text-sm">{book?.writer}</span>
