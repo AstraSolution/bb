@@ -26,6 +26,19 @@
   background-size: 25%;
 }
 
+.buy-book-bg {
+  background: url("https://i.ibb.co/DfnH8Vq/boi-binimoy-seamless-pattern.png") repeat;
+  background-repeat: repeat;
+  background-size: 40%;
+}
+
+
+.related-bg {
+  background: url("https://i.ibb.co/vwPGFwM/boi-binimoy-seamless-pattern-50.png") repeat;
+  background-repeat: repeat;
+  background-size: 150%;
+}
+
 .bg-text {
   background: url("https://i.ibb.co/tHMFDx1/boi-binimoy-seamless-pattern-50-50.png") repeat;
   background-size: 20%;
