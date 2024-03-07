@@ -105,7 +105,7 @@ export const Footer = () => {
         <hr />
         <div className="flex flex-col justify-between text-center md:text-start pt-5 pb-10 border-t border-deep-purple-accent-200 sm:flex-row">
           <p className="text-sm text-white">
-            &copy; Copyright {currentYear} Boi Binimoy. All rights reserved.
+            &copy; Copyright: {currentYear} Boi Binimoy. All rights reserved.
           </p>
           <div className="flex justify-center text-white md:justify-normal items-center mt-4 space-x-4 sm:mt-0">
             <a

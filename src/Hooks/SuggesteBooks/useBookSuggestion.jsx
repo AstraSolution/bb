@@ -29,7 +29,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
     const { data: categoryDetails = [], isLoading: categoryDetailsLoading } = useQuery({
         queryKey: ['categoryDetails', interest?.category],
         queryFn: async () => {
-            if (isLoggedIn && interest?.category) {
+            if (isLoggedIn && interest?.category && interest?.category?.length > 0) {
                 const categoryDetailsPromises = interest.category.map(async (categoryName) => {
                     try {
                         const response = await axiosPublic.get(`/api/v1/category/${categoryName}`);
@@ -45,7 +45,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
                 const categories = await Promise.all(categoryDetailsPromises);
                 return categories.filter(category => category !== null).flatMap(category => category);
             } else {
-                return []; 
+                return [];
             }
         },
     });
@@ -62,7 +62,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
     const { data: writersBooks = [], isLoading: writersBooksLoading } = useQuery({
         queryKey: ['writersBooks', interest?.writer],
         queryFn: async () => {
-            if (isLoggedIn && interest?.writer) {
+            if (isLoggedIn && interest?.writer && interest?.writer?.length > 0) {
                 const writersBooksPromises = interest.writer.map(async (writerName) => {
                     try {
                         const response = await axiosPublic.get(`/api/v1/writer/${writerName}`);
@@ -78,7 +78,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
                 const writers = await Promise.all(writersBooksPromises);
                 return writers?.filter(writer => writer !== null).flatMap(writer => writer);
             } else {
-                return []; 
+                return [];
             }
         },
     });
@@ -95,7 +95,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
     const { data: publisherBooks = [], isLoading: publisherBooksLoading } = useQuery({
         queryKey: ['publisherBooks', interest?.publisher],
         queryFn: async () => {
-            if (isLoggedIn && interest?.publisher) {
+            if (isLoggedIn && interest?.publisher && interest?.publisher?.length > 0) {
                 const publisherBooksPromises = interest.publisher.map(async (publisherName) => {
                     try {
                         const response = await axiosPublic.get(`/api/v1/publisher/${publisherName}`);
@@ -111,7 +111,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
                 const publishers = await Promise.all(publisherBooksPromises);
                 return publishers?.filter(publisher => publisher !== null).flatMap(publisher => publisher);
             } else {
-                return []; 
+                return [];
             }
         },
     });
@@ -128,7 +128,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
     const { data: bookDetails = [], isLoading: booksLoading } = useQuery({
         queryKey: ["bookDetails", interest?.book],
         queryFn: async () => {
-            if (isLoggedIn && interest?.book) {
+            if (isLoggedIn && interest?.book && interest?.book?.length > 0) {
                 const bookDetailsPromises = interest.book.map(async (_id) => {
                     try {
                         const response = await axiosPublic.get(`/api/v1/buy-books/${_id}`);
@@ -144,7 +144,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
                 const books = await Promise.all(bookDetailsPromises);
                 return books?.filter(book => book !== null);
             } else {
-                return []; 
+                return [];
             }
         },
     });
@@ -161,7 +161,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
 
     const fetchRelatedBooks = useCallback(async (writer, publisher, category) => {
         try {
-            setRelatedBooksLoading(true); 
+            setRelatedBooksLoading(true);
             const writerResponse = await axiosPublic.get(`/api/v1/writer/${writer}`);
             const publisherResponse = await axiosPublic.get(`/api/v1/publisher/${publisher}`);
             const categoryResponse = await axiosPublic.get(`/api/v1/category/${category}`);
@@ -259,7 +259,6 @@ const useBookSuggestion = (CurrentlyViewing) => {
 
     useEffect(() => {
         if (isLoggedIn === true && interest) {
-
             const filteredBooks = [];
 
             booksFromCategory?.forEach(book => {
@@ -307,6 +306,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
             });
 
             const shuffledBooks = uniqueBooks.slice();
+
             for (let i = shuffledBooks.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [shuffledBooks[i], shuffledBooks[j]] = [shuffledBooks[j], shuffledBooks[i]];
@@ -317,6 +317,12 @@ const useBookSuggestion = (CurrentlyViewing) => {
 
         }
     }, [isLoggedIn, booksFromCategory, booksFromWriters, booksFromPublishers, interestedBooks, interest]);
+
+    console.log(isLoggedIn)
+    console.log(booksFromCategory)
+    console.log(booksFromWriters)
+    console.log(booksFromPublishers)
+    console.log(interest)
 
 
     // ----------------If Top Tear Suggestions has no data----------------
@@ -330,7 +336,9 @@ const useBookSuggestion = (CurrentlyViewing) => {
             relatedBooksLoading === false &&
             currentlyViewingBookLoading === false &&
             isLoggedIn === true &&
-            interest
+            interest?.book?.length > 0 &&
+            interest?.publisher?.length > 0 &&
+            interest?.category?.length > 0 
         ) {
             if (topTearSuggestions.length === 0 && topTearSuggestionsLoading === false) {
                 // Set topTearSuggestionsLoading to true when fetching data
