@@ -20,7 +20,6 @@ export default function Writer() {
     },
   });
 
-  console.log(writers);
 
   let settings = {
     dots: false,

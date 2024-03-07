@@ -319,9 +319,6 @@ const useBookSuggestion = (CurrentlyViewing) => {
     }, [isLoggedIn, booksFromCategory, booksFromWriters, booksFromPublishers, interestedBooks, interest]);
 
 
-    console.log("Top Tier Suggestions", topTearSuggestions);
-
-
     // ----------------If Top Tear Suggestions has no data----------------
 
     useEffect(() => {
@@ -354,7 +351,6 @@ const useBookSuggestion = (CurrentlyViewing) => {
                         }
 
                         // Update state with shuffled buy books data
-                        console.log("buyBook", buyBooksData);
                         setTopTearSuggestions(buyBooksData);
                     } catch (error) {
                         console.error("Error fetching buy books:", error);
