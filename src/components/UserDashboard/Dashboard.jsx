@@ -24,7 +24,7 @@ const Dashboard = ({ children }) => {
   const { isAdmin, isModerator, isSeller, isPublisher, isUser } = useOneUser();
 
   const handleLogout = () => {
-    logOut(); 
+    logOut();
     router.push('/');
   }
 
@@ -185,6 +185,14 @@ const Dashboard = ({ children }) => {
                 <span className="text">Add Book</span>
               </Link>
             </li>
+            <li
+              className={pathname == "/dashboard/list-exchange" ? "active" : ""}
+            >
+              <Link href="/dashboard/list-exchange">
+                <i className="bx bxs-book-add"></i>
+                <span className="text">List Book</span>
+              </Link>
+            </li>
             <li className={pathname == "/dashboard/orders" ? "active" : ""}>
               <Link href="/dashboard/orders">
                 <i className="bx bxs-book-add"></i>
@@ -209,14 +217,6 @@ const Dashboard = ({ children }) => {
               <Link href="/dashboard/add-banner">
                 <i className="bx bxs-image-add"></i>
                 <span className="text">Add Banner</span>
-              </Link>
-            </li>
-            <li
-              className={pathname == "/dashboard/list-exchange" ? "active" : ""}
-            >
-              <Link href="/dashboard/list-exchange">
-                <i className="bx bxs-book-add"></i>
-                <span className="text">List Book</span>
               </Link>
             </li>
             <li className={pathname == "/dashboard/all-books" ? "active" : ""}>
@@ -468,7 +468,7 @@ const Dashboard = ({ children }) => {
         )}
 
         <ul className="side-menu">
-        <i className="bx bxs-log-out-circle logout text-red-500"></i>
+          <i className="bx bxs-log-out-circle logout text-red-500"></i>
           <button onClick={handleLogout}>
 
             <span className="text text-red-500">Logout</span>
@@ -482,19 +482,20 @@ const Dashboard = ({ children }) => {
         <div>
           <nav>
             <i className="bx bx-menu"></i>
-            <a href="#" className="nav-link">
-              Categories
-            </a>
-            <form action="#">
-              <div className="form-input">
-                <input type="search" placeholder="Search..." />
-                <button type="submit" className="search-btn">
-                  <i className="bx bx-search"></i>
-                </button>
+            <form action="#" className="">
+              <div className="hidden">
+                <div className="form-input hidden">
+                  <input type="search" placeholder="Search... " className="hidden" />
+                  <button type="submit" className="search-btn ">
+                    <i className="bx bx-search "></i>
+                  </button>
+                </div>
               </div>
             </form>
-            <input type="checkbox" id="switch-mode" hidden />
-            <label htmlFor="switch-mode" className="switch-mode"></label>
+            <div className="hidden">
+              <input type="checkbox" id="switch-mode" hidden />
+              <label htmlFor="switch-mode" className="switch-mode"></label>
+            </div>
             {/* notification start*/}
             <div className="relative">
               {/* notification button start */}
