@@ -25,7 +25,7 @@ const TestExchange = () => {
   return (
     <div className="container mx-auto pt-5 rounded-lg px-5">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl md:text-3xl text-[#016961] font-bold text-nowrap">
+        <h2 className="text-xl md:text-3xl text-[#016961] font-bold text-nowrap">
           Exchange Now
         </h2>
         <hr className="hr" />
@@ -36,7 +36,7 @@ const TestExchange = () => {
             className="button-color px-4 py-2 rounded-full text-sm md:text-base text-teal-50 flex items-center gap-1"
           >
             View All{" "}
-            <span className="text-xl">
+            <span className="text-base md:text-xl">
               <FiArrowUpRight />
             </span>
           </Link>

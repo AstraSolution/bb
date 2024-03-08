@@ -84,16 +84,16 @@ export default function BuyNow() {
   return (
     <div className="container mt-12 md:mt-14 mx-auto px-5">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl md:text-3xl text-[#016961] font-bold text-nowrap">
+        <h2 className="text-xl md:text-3xl text-[#016961] font-bold text-nowrap">
           Buy Now
         </h2>
         <hr className="hr " />
-        <div className="flex items-center justify-end gap-3 text-nowrap">
+        <div className="flex items-center justify-end gap-2 md:gap-3 text-nowrap">
           {/* View All button */}
           <Link href={`/buyBooks`}>
-            <button className="button-color px-4 py-2 rounded-full text-sm md:text-base text-teal-50 flex items-center gap-1">
+            <button className="button-color px-2.5 py-1 md:px-4 md:py-2 rounded-full text-sm md:text-base text-teal-50 flex items-center gap-1">
               View All{" "}
-              <span className="text-xl">
+              <span className="text-base md:text-xl">
                 <FiArrowUpRight />
               </span>
             </button>
@@ -109,7 +109,7 @@ export default function BuyNow() {
               viewBox="0 0 24 24"
               strokeWidth="1.5"
               stroke="currentColor"
-              className="w-6 h-6"
+              className="w-5 h-5 md:w-6 md:h-6"
             >
               <path
                 strokeLinecap="round"
@@ -129,7 +129,7 @@ export default function BuyNow() {
               viewBox="0 0 24 24"
               strokeWidth="1.5"
               stroke="currentColor"
-              className="w-6 h-6"
+              className="w-5 h-5 md:w-6 md:h-6"
             >
               <path
                 strokeLinecap="round"
