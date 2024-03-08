@@ -119,22 +119,20 @@ const Users = () => {
             <div className="w-full rounded-2xl overflow-hidden lg:shadow-lg my-5 duration-300">
               <div className="hidden lg:block bg-[#016961] duration-300 text-white ">
                 <div className="flex items-center justify-between font-semibold border border-gray-100 px-10 py-5">
-                  <h5 className="w-[40px] lg:mr-10"></h5>
-                  <h5 className="w-full lg:mr-10">User</h5>
-                  <h5 className="w-full lg:mr-10">Email</h5>
-                  {/* <h5 className="w-full lg:mr-10">Register Date</h5> */}
-                  <h5 className="w-full lg:mr-10">Roles</h5>
-                  <h5 className="w-full lg:mr-10">View Profile</h5>
+                  <h5 className="w-full text-center">User</h5>
+                  <h5 className="w-full text-center">Email</h5>
+                  <h5 className="w-full text-center">Roles</h5>
+                  <h5 className="w-full text-center">Update Role</h5>
                 </div>
               </div>
-              <div className="flex-1 sm:flex-none grid grid-cols-1 gap-5 lg:gap-0">
+              <div className="flex-1 flex-none lg:grid lg:grid-cols-1 gap-5 lg:gap-0">
                 {allUser.map((user) => (
                   <div
                     key={user._id}
                     className="bg-white rounded-3xl lg:rounded-none shadow-sm hover:bg-[#19a49113] lg:shadow-inherit border border-gray-100"
                   >
-                    <div className="flex flex-col lg:flex-row items-center justify-start lg:justify-between gap-1  rounded-3xl lg:rounded-none px-6 lg:px-10 py-5 mx-auto duration-300">
-                      <div className="min-w-[40px] mr-2">
+                    <div className="lg:grid lg:grid-cols-4 items-center rounded-3xl lg:rounded-none px-6 py-5 mx-auto duration-300">
+                      <div className="flex flex-col lg:flex-row justify-center item-center">
                         <Image
                           src={user?.image}
                           alt="profile"
@@ -143,17 +141,14 @@ const Users = () => {
                           height={500}
                           className="rounded-full p-1 mx-auto size-32 lg:size-10"
                         />
+                        <h5 className="w-full text-lg font-semibold text-center line-clamp-1 truncate">
+                          {user?.name}
+                        </h5>
                       </div>
-                      <h5 className="w-full lg:mr-10 text-lg font-semibold text-center lg:text-start line-clamp-1 truncate">
-                        {user?.name}
-                      </h5>
-                      <h5 className="w-full lg:mr-10 text-center lg:text-start">
+                      <h5 className="w-full text-center">
                         {user?.email}
                       </h5>
-                      <h5 className="w-full lg:mr-10 text-center lg:text-start">
-                        {user?.reg_date}
-                      </h5>
-                      <div className="w-full lg:mr-10 flex gap-1.5 text-sm text-black justify-center lg:justify-start">
+                      <div className="w-full flex gap-1.5 text-sm text-black justify-center">
                         {user?.isModerator && (
                           <p className="py-0.5 px-2 bg-orange-400 rounded-full my-1.5">
                             Moderator
@@ -169,16 +164,28 @@ const Users = () => {
                             Seller
                           </p>
                         )}
+                        {user?.isUser && (
+                          <p className="py-0.5 px-2 bg-blue-500 rounded-full my-1.5">
+                            User
+                          </p>
+                        )}
+                        {user?.isAdmin && (
+                          <p className="py-0.5 px-2 bg-red-500 text-white rounded-full my-1.5">
+                            Admin
+                          </p>
+                        )}
                       </div>
-                      <button
-                        className="w-full bg-[#016961] py-2 rounded-full lg:bg-transparent lg:mr-10 mt-2 lg:mt-auto text-center lg:text-start text-white lg:text-black"
-                        onClick={() => {
-                          setData(user);
-                          document.getElementById("role_modal").showModal();
-                        }}
-                      >
-                        Role Update
-                      </button>
+                      <div className="text-center">
+                        <button
+                          className="btn mx-auto lg:w-1/2 py-2 rounded-full lg:bg-transparent mt-2"
+                          onClick={() => {
+                            setData(user);
+                            document.getElementById("role_modal").showModal();
+                          }}
+                        >
+                          Role Update
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -186,7 +193,7 @@ const Users = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div >
 
       <dialog id="role_modal" className="modal">
         <div className="modal-box">
@@ -223,10 +230,7 @@ const Users = () => {
               </div>
             </div>
 
-
-
-            <dl className="mt-6 flex gap-4 sm:gap-6">
-
+            <div className="mt-6 flex gap-4 sm:gap-6">
               <div className=" flex items-center gap-6 cursor-pointer">
                 {data?.isModerator ? (
                   <button
@@ -274,11 +278,8 @@ const Users = () => {
                   </button>
                 )}
               </div>
-
-            </dl>
+            </div>
           </a>
-
-
 
           <div className="modal-action">
             <form method="dialog">
@@ -290,32 +291,34 @@ const Users = () => {
         </div>
       </dialog>
 
-      {pageNumbers?.length > 1 && (
-        <div className="flex justify-center mt-4">
-          <button
-            onClick={handlePrevPage}
-            className="mx-1 px-3 py-1 rounded-lg bg-blue-500 text-white hover:bg-blue-700"
-          >
-            Prev
-          </button>
-          {pageNumbers.map((_, index) => (
+      {
+        pageNumbers?.length > 1 && (
+          <div className="flex justify-center mt-4">
             <button
-              key={index}
-              onClick={() => handlePagination(index + 1)}
-              className={`mx-1 px-3 py-1 rounded-lg bg-blue-500 text-white hover:bg-blue-700 ${currentPage === index + 1 ? "bg-blue-700" : ""
-                }`}
+              onClick={handlePrevPage}
+              className="mx-1 px-3 py-1 rounded-lg bg-blue-500 text-white hover:bg-blue-700"
             >
-              {index + 1}
+              Prev
             </button>
-          ))}
-          <button
-            onClick={handleNextPage}
-            className="mx-1 px-3 py-1 rounded-lg bg-blue-500 text-white hover:bg-blue-700"
-          >
-            Next
-          </button>
-        </div>
-      )}
+            {pageNumbers.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => handlePagination(index + 1)}
+                className={`mx-1 px-3 py-1 rounded-lg bg-blue-500 text-white hover:bg-blue-700 ${currentPage === index + 1 ? "bg-blue-700" : ""
+                  }`}
+              >
+                {index + 1}
+              </button>
+            ))}
+            <button
+              onClick={handleNextPage}
+              className="mx-1 px-3 py-1 rounded-lg bg-blue-500 text-white hover:bg-blue-700"
+            >
+              Next
+            </button>
+          </div>
+        )
+      }
     </>
   );
 };

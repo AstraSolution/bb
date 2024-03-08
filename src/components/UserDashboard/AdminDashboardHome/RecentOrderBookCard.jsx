@@ -22,9 +22,10 @@ export default function RecentOrderBookCard({ item }) {
   return (
     <div key={_id} className="border p-4 rounded-lg grid grid-cols-3 gap-3">
       <div className="flex items-center gap-4">
-        {carts.map((image, index) => (
+        {carts.slice(0, 4).map((image, index) => (
           <img key={index} className="w-14" src={image.cover_image} alt={`Cover ${index}`} />
         ))}
+        {carts.length > 4 && <p className="text-sm">+ {carts.length - 4} more</p>}
       </div>
 
       <p>{clientEmail}</p>

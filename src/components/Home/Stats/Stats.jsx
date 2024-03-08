@@ -23,13 +23,13 @@ const Stats = () => {
     },
   });
 
-// order All data 
+  // order All data 
   const { sellerOrders } = useSellerOrders();
 
 
   //  exchange All book 
-  const {exchangeBooks} = useExchangeBooksForHome();
-  
+  const { exchangeBooks } = useExchangeBooksForHome();
+
   // total user start
   const [currentPage, setCurrentPage] = useState(1);
   const { usersData } = useAllUsers(currentPage, 14);
@@ -62,40 +62,53 @@ const Stats = () => {
       <div className="bg-[#016961] text-white rounded-lg md:rounded-full px-4 py-5 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-10">
         <div className="grid grid-cols-2 row-gap-8 md:grid-cols-4">
           <div className="text-center md:border-r">
-            <h6 className="text-3xl font-bold lg:text-4xl xl:text-5xl">
-              {isVisible && <CountUp end={exchangeBooks?.length} duration={2} />}
-            </h6>
+            <div className="flex items-center justify-center gap-2">
+              <h6 className="text-3xl font-bold lg:text-4xl xl:text-5xl">
+                {isVisible && <CountUp end={exchangeBooks?.length} duration={2} />}
+              </h6>
+              <span className="text-lg md:text-3xl lg:text-5xl">+</span>
+            </div>
             <p className="text-sm font-medium tracking-widest text-gray-100 uppercase lg:text-base">
               Exchange
             </p>
           </div>
           <div className="text-center md:border-r">
-            <h6 className="text-3xl font-bold lg:text-4xl xl:text-5xl">
-              {isVisible && <CountUp end={sellerOrders?.length} duration={2} />}
-            </h6>
+            <div className="flex items-center justify-center gap-2">
+              <h6 className="text-3xl font-bold lg:text-4xl xl:text-5xl">
+                {isVisible && <CountUp end={sellerOrders?.length} duration={2} />}
+              </h6>
+              <span className="text-lg md:text-3xl lg:text-5xl">+</span>
+            </div>
             <p className="text-sm font-medium tracking-widest text-gray-100 uppercase lg:text-base">
               Sale
             </p>
           </div>
+
           <div className="text-center md:border-r">
-            <h6 className="text-3xl font-bold lg:text-4xl xl:text-5xl">
-              {isVisible && <CountUp end={totalUser} duration={2} />}
-            </h6>
+            <div className="flex items-center justify-center gap-2">
+              <h6 className="text-3xl font-bold lg:text-4xl xl:text-5xl">
+                {isVisible && <CountUp end={totalUser} duration={2} />}
+              </h6>
+              <span className="text-lg md:text-3xl lg:text-5xl">+</span>
+            </div>
             <p className="text-sm font-medium tracking-widest text-gray-100 uppercase lg:text-base">
               Users
             </p>
           </div>
           <div className="text-center">
-            <h6 className="text-3xl font-bold lg:text-4xl xl:text-5xl">
-              {isVisible && <CountUp end={writers?.length} duration={2} />}
-            </h6>
+            <div className="flex items-center justify-center gap-2">
+              <h6 className="text-3xl font-bold lg:text-4xl xl:text-5xl">
+                {isVisible && <CountUp end={writers?.length} duration={2} />}
+              </h6>
+              <span className="text-lg md:text-3xl lg:text-5xl">+</span>
+            </div>
             <p className="text-sm font-medium tracking-widest text-gray-100 uppercase lg:text-base">
               Writers
             </p>
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

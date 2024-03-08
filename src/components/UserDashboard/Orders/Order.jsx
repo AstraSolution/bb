@@ -60,10 +60,10 @@ const Order = ({order, refetch}) => {
       <h5 className=" col-span-3"> {order?.user_email}</h5>
       <h5 className=" col-span-1">
         {
-           !order?.isDeliverd ? <button onClick={() => handleDelivary(order?.book_id, order?.title)} className="btn btn-sm">Pending</button>
+           !order?.isDeliverd ? <button onClick={() => handleDelivary(order?.book_id, order?.title)} className="btn btn-sm bg-amber-300 px-2 py-1.5 rounded-full w-full">Pending</button>
 
            :
-           <button className="btn btn-sm">Done</button>
+           <button className="btn btn-sm bg-emerald-400 px-2 py-1.5 rounded-full w-full">Done</button>
 
         }
       </h5>

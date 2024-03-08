@@ -154,6 +154,7 @@ const AddBook = () => {
                 <option value="english">English</option>
                 <option value="bangla">Bangla</option>
                 <option value="arabic">Arabic</option>
+                <option value="italian">Italian</option>
               </select>
             </div>
           </div>

@@ -21,11 +21,11 @@ const MyOrder = ({ cart }) => {
       <h5 className=" col-span-1">{cart?.unit_price} BDT</h5>
       <h5 className=" col-span-1">{cart?.total_price} BDT</h5>
       <h5 className=" col-span-2">{cart?.owner_email}</h5>
-      <h5 className=" col-span-1">
+      <h5 className=" col-span-1  w-full">
         {cart?.isDeliverd ? (
-          <button>Done</button>
+          <p className="bg-emerald-400 px-2 py-1.5 rounded-full w-full">Done</p>
         ) : (
-          <button>Pendingd</button>
+          <p className="bg-amber-300 px-2 py-1.5 rounded-full w-full">Pending</p>
         )}
       </h5>
     </div>
