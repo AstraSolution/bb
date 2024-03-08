@@ -116,13 +116,9 @@ const PublisherDetails = () => {
               className="rounded-full object-cover"
             />
           </div>
-          <div className="text-center text-teal-800 space-y-1 mt-3">
+          <div className="text-center text-teal-800 space-y-1 mt-3 mb-2">
             <h2 className="text-4xl font-bold">{publisher?.publisher}</h2>
-            <h2 className="text-xs">4.5k Followers | 30 Books</h2>
           </div>
-          <button className="bg-teal-700 rounded-md text-white text-lg px-5 py-2 w-full my-3">
-            Follow
-          </button>
           <div>
             <p className="text-teal-800 indent-8 text-justify">
               {publisher?.description}
