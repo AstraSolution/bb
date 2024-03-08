@@ -49,7 +49,7 @@ export default function ForYou() {
     return (
         <div className="container mt-12 md:mt-16 mx-auto px-5">
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl md:text-3xl text-[#016961] font-bold text-nowrap">For You</h2>
+                <h2 className="text-2xl md:text-3xl text-[#016961] font-bold text-nowrap">Suggested</h2>
                 <hr className="hr " />
                 <div className="flex items-center justify-end gap-3 text-nowrap">
                     {/* Previous Button */}
