@@ -40,7 +40,7 @@ const AllExchangeBooks = () => {
   };
 
   return (
-    <div className="min-h-screen container mx-auto px-3">
+    <div className="min-h-screen container mx-auto px-3 bg-teal-50">
       <div className="py-12">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-7 gap-5">
           {books?.map((book) => (
