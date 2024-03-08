@@ -81,28 +81,28 @@ const JoinUs = () => {
     });
   };
 
-  const handleSocialLogin = (user) => {
-    user()
-      .then((res) => {
-        if (res.user) {
-          toast.success("User logged in successfully", {
-            position: "top-center",
-          });
-        }
+  // const handleSocialLogin = (user) => {
+  //   user()
+  //     .then((res) => {
+  //       if (res.user) {
+  //         toast.success("User logged in successfully", {
+  //           position: "top-center",
+  //         });
+  //       }
 
-        const userInfo = {
-          email: res.user?.email,
-          name: res.user?.displayName,
-        };
+  //       const userInfo = {
+  //         email: res.user?.email,
+  //         name: res.user?.displayName,
+  //       };
 
-        axiosPublic.post("/users", userInfo).then((res) => {
-          router.push("/");
-        });
-      })
-      .catch((error) => {
-        Swal.fire(error);
-      });
-  };
+  //       axiosPublic.post("/users", userInfo).then((res) => {
+  //         router.push("/");
+  //       });
+  //     })
+  //     .catch((error) => {
+  //       Swal.fire(error);
+  //     });
+  // };
 
   return (
     <>
