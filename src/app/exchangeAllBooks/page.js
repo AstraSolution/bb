@@ -3,7 +3,7 @@ import ExchangeBooks from '@/components/Exchange/ExchangeBooks';
 
 const page = () => {
     return (
-        <div>
+        <div className='bg-teal-50'>
             <ExchangeBooks></ExchangeBooks>
         </div>
     );
