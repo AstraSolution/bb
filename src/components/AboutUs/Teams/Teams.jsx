@@ -5,13 +5,13 @@ import Image from "next/image";
 const Teams = () => {
   const teams = [
     {
-      img: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=3&amp;h=750&amp;w=1260",
-      name: "Shahriar Rafi",
+      img: "https://i.ibb.co/YPf4FHB/1709505568543.jpg",
+      name: "Shahreyar Rafi",
       title: "Web Developer",
     },
     {
       img: "https://i.ibb.co/28RvMyT/about1.jpg",
-      name: "SIYAM AHMED",
+      name: "Siyam Ahmed",
       title: "Front-End Web Developer",
     },
     {
@@ -27,11 +27,6 @@ const Teams = () => {
     {
       img: "https://i.ibb.co/DgNPrbV/429453143-733783798531919-7206945882981816927-n.png",
       name: "MD Parvej",
-      title: "Web Developer",
-    },
-    {
-      img: "https://i.ibb.co/28RvMyT/about1.jpg",
-      name: "MD Siyam Ahmed",
       title: "Web Developer",
     },
     {

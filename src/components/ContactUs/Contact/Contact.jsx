@@ -100,9 +100,7 @@ const Contact = () => {
                 Drop in our office
               </h1>
               <p className="text-gray-100 text-xs md:text-sm">
-                dolor sit amet, consectetur adipiscing elit. Aliquam tincidunt
-                arcu diam, eu feugiat felis fermentum id. Curabitur vitae nibh
-                viverra, auctor turpis sed, scelerisque ex.
+                Feel free to drop by our office whenever you&apos;re in the area! We&apos;re conveniently located and always happy to welcome visitors. Whether you have questions, feedback, or just want to say hello, our doors are open. We look forward to meeting you in person and discussing how we can assist you further.
               </p>
 
               <div className="flex my-4 w-2/3 lg:w-1/2">
