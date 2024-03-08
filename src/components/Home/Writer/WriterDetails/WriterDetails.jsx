@@ -141,22 +141,6 @@ const WriterDetails = () => {
           <h1 className="text-3xl text-teal-800 font-semibold">
             All books from this writer..
           </h1>
-
-          <div className='flex items-cente gap-6 mt-2'>
-
-            <div className=''>
-              <input type="text" name="" id="" placeholder='Search ...' className='p-2 rounded-lg border 2 border-black' />
-            </div>
-
-            <div className="dropdown dropdown-bottom">
-              <div tabIndex={0} role="button" className=" p-2 rounded-lg border 2 border-black">Sort By <IoIosArrowDown className='inline' /></div>
-              <ul tabIndex={0} className="dropdown-content z-[10] menu p-2 shadow bg-base-100 rounded-box w-52">
-                <li>price</li>
-                <li>Name</li>
-              </ul>
-            </div>
-          </div>
-
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
             {books?.map((book) => (
               <BookCard key={book?._id} item={book}></BookCard>
