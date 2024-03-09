@@ -6,7 +6,7 @@ import useAxiosPublic from '../Axios/useAxiosPublic';
 import { AuthContext } from '@/providers/AuthProvider';
 
 const useBookSuggestion = (CurrentlyViewing) => {
-    const { isLoggedIn } = useContext(AuthContext);
+    const { isLoggedIn, loading: userLoading } = useContext(AuthContext);
     const { interest } = useOneUser();
     const axiosPublic = useAxiosPublic();
     const [booksFromCategory, setBooksFromCategory] = useState([]);
@@ -29,7 +29,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
     const { data: categoryDetails = [], isLoading: categoryDetailsLoading } = useQuery({
         queryKey: ['categoryDetails', interest?.category],
         queryFn: async () => {
-            if (isLoggedIn && interest?.category && interest?.category?.length > 0) {
+            if (isLoggedIn && interest?.category && interest?.category?.length > 0 && userLoading === false) {
                 const categoryDetailsPromises = interest.category.map(async (categoryName) => {
                     try {
                         const response = await axiosPublic.get(`/api/v1/category/${categoryName}`);
@@ -62,7 +62,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
     const { data: writersBooks = [], isLoading: writersBooksLoading } = useQuery({
         queryKey: ['writersBooks', interest?.writer],
         queryFn: async () => {
-            if (isLoggedIn && interest?.writer && interest?.writer?.length > 0) {
+            if (isLoggedIn && interest?.writer && interest?.writer?.length > 0 && userLoading === false) {
                 const writersBooksPromises = interest.writer.map(async (writerName) => {
                     try {
                         const response = await axiosPublic.get(`/api/v1/writer/${writerName}`);
@@ -95,7 +95,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
     const { data: publisherBooks = [], isLoading: publisherBooksLoading } = useQuery({
         queryKey: ['publisherBooks', interest?.publisher],
         queryFn: async () => {
-            if (isLoggedIn && interest?.publisher && interest?.publisher?.length > 0) {
+            if (isLoggedIn && interest?.publisher && interest?.publisher?.length > 0 && userLoading === false) {
                 const publisherBooksPromises = interest.publisher.map(async (publisherName) => {
                     try {
                         const response = await axiosPublic.get(`/api/v1/publisher/${publisherName}`);
@@ -128,7 +128,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
     const { data: bookDetails = [], isLoading: booksLoading } = useQuery({
         queryKey: ["bookDetails", interest?.book],
         queryFn: async () => {
-            if (isLoggedIn && interest?.book && interest?.book?.length > 0) {
+            if (isLoggedIn && interest?.book && interest?.book?.length > 0 && userLoading === false) {
                 const bookDetailsPromises = interest.book.map(async (_id) => {
                     try {
                         const response = await axiosPublic.get(`/api/v1/buy-books/${_id}`);
@@ -216,15 +216,17 @@ const useBookSuggestion = (CurrentlyViewing) => {
     const { data: currentlyViewingBookDetails = [], isLoading: currentlyViewingBookLoading } = useQuery({
         queryKey: ["currentlyViewingBookDetails"],
         queryFn: async () => {
-            try {
-                const response = await axiosPublic.get(`/api/v1/buy-books/${CurrentlyViewing}`);
-                if (response.status !== 200) {
-                    throw new Error('Failed to fetch book details');
+            if (CurrentlyViewing) {
+                try {
+                    const response = await axiosPublic.get(`/api/v1/buy-books/${CurrentlyViewing}`);
+                    if (response.status !== 200) {
+                        throw new Error('Failed to fetch book details');
+                    }
+                    return response?.data;
+                } catch (error) {
+                    console.error(error);
+                    return null;
                 }
-                return response?.data;
-            } catch (error) {
-                console.error(error);
-                return null;
             }
         },
     });
@@ -258,7 +260,12 @@ const useBookSuggestion = (CurrentlyViewing) => {
     // ----------------Top tier books----------------
 
     useEffect(() => {
-        if (isLoggedIn === true && interest) {
+        if (isLoggedIn === true &&
+            userLoading === false &&
+            interest?.book?.length > 0 &&
+            interest?.publisher?.length > 0 &&
+            interest?.category?.length > 0) {
+
             const filteredBooks = [];
 
             booksFromCategory?.forEach(book => {
@@ -315,86 +322,56 @@ const useBookSuggestion = (CurrentlyViewing) => {
             setTopTearSuggestionsLoading(false);
             setTopTearSuggestions(shuffledBooks);
 
+        } else {
+            setTopTearSuggestionsLoading(false);
         }
-    }, [isLoggedIn, booksFromCategory, booksFromWriters, booksFromPublishers, interestedBooks, interest]);
 
+    }, [isLoggedIn, userLoading, booksFromCategory, booksFromWriters, booksFromPublishers, interestedBooks, interest]);
 
-    // ----------------If Top Tear Suggestions has no data----------------
+    // --------------------------------------------------
+
 
     useEffect(() => {
+        let timeoutId;
         if (
-            booksLoading === false &&
-            categoryDetailsLoading === false &&
-            writersBooksLoading === false &&
-            publisherBooksLoading === false &&
-            relatedBooksLoading === false &&
-            currentlyViewingBookLoading === false &&
-            isLoggedIn === true &&
-            interest?.book?.length > 0 &&
-            interest?.publisher?.length > 0 &&
-            interest?.category?.length > 0 
+            !booksLoading &&
+            !categoryDetailsLoading &&
+            !writersBooksLoading &&
+            !publisherBooksLoading &&
+            !topTearSuggestionsLoading &&
+            !userLoading &&
+            topTearSuggestions.length === 0
         ) {
-            if (topTearSuggestions.length === 0 && topTearSuggestionsLoading === false) {
-                // Set topTearSuggestionsLoading to true when fetching data
-                setTopTearSuggestionsLoading(true);
-                // Fetch books from the `buy-books` endpoint
-                const fetchBuyBooks = async () => {
-                    try {
-                        const response = await axiosPublic.get(`/api/v1/buy-books`);
-                        if (response?.status !== 200) {
-                            throw new Error('Failed to fetch buy books');
-                        }
-                        let buyBooksData = response?.data?.buyBooks || [];
-
-                        // Fisher-Yates shuffle algorithm
-                        for (let i = buyBooksData?.length - 1; i > 0; i--) {
-                            const j = Math.floor(Math.random() * (i + 1));
-                            [buyBooksData[i], buyBooksData[j]] = [buyBooksData[j], buyBooksData[i]];
-                        }
-
-                        // Update state with shuffled buy books data
-                        setTopTearSuggestions(buyBooksData);
-                    } catch (error) {
-                        console.error("Error fetching buy books:", error);
-                    } finally {
-                        // Set topTearSuggestionsLoading to false after fetching data
-                        setTopTearSuggestionsLoading(false);
-                    }
-                };
-                fetchBuyBooks();
-            }
-        }
-    }, [isLoggedIn, interest, booksLoading, categoryDetailsLoading, writersBooksLoading, publisherBooksLoading, relatedBooksLoading, currentlyViewingBookLoading, axiosPublic, topTearSuggestionsLoading, topTearSuggestions.length]);
-
-
-    // ----------------If user not logged in----------------
-
-    useEffect(() => {
-        if (isLoggedIn === false) {
-            setTopTearSuggestionsLoading(true);
-            const fetchBuyBooks = async () => {
+            setSuggestionsLoading(true);
+            // Debounce the fetchBuyBooks function
+            timeoutId = setTimeout(async () => {
                 try {
                     const response = await axiosPublic.get(`/api/v1/buy-books`);
                     if (response?.status !== 200) {
                         throw new Error('Failed to fetch buy books');
                     }
                     let buyBooksData = response?.data?.buyBooks || [];
-
-                    for (let i = buyBooksData?.length - 1; i > 0; i--) {
+                    // Shuffle the buyBooksData array
+                    for (let i = buyBooksData.length - 1; i > 0; i--) {
                         const j = Math.floor(Math.random() * (i + 1));
                         [buyBooksData[i], buyBooksData[j]] = [buyBooksData[j], buyBooksData[i]];
                     }
-
                     setTopTearSuggestions(buyBooksData);
                 } catch (error) {
                     console.error("Error fetching buy books:", error);
                 } finally {
-                    setTopTearSuggestionsLoading(false);
+                    setSuggestionsLoading(false);
                 }
-            };
-            fetchBuyBooks();
+            }, 1000); // Adjust the debounce delay as needed
         }
-    }, [isLoggedIn, axiosPublic]);
+
+        // Cleanup function to clear the timeout on component unmount or dependency change
+        return () => {
+            clearTimeout(timeoutId);
+        };
+    }, [axiosPublic, booksLoading, categoryDetailsLoading, writersBooksLoading, publisherBooksLoading, topTearSuggestionsLoading, userLoading, topTearSuggestions]);
+
+
 
 
     // ----------------Suggestions Loading----------------
