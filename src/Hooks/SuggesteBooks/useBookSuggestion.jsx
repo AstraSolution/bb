@@ -261,18 +261,15 @@ const useBookSuggestion = (CurrentlyViewing) => {
 
     // ----------------Top tier books----------------
 
-
-
-
     useEffect(() => {
         if (isLoggedIn === true &&
             userLoading === false &&
             interestLoading === false &&
-            categoryDetailsLoading  === false &&
-            writersBooksLoading  === false &&
-            publisherBooksLoading  === false &&
-            booksLoading  === false) {
-                
+            categoryDetailsLoading === false &&
+            writersBooksLoading === false &&
+            publisherBooksLoading === false &&
+            booksLoading === false) {
+
             const filteredBooks = [];
 
             booksFromCategory?.forEach(book => {
@@ -335,18 +332,18 @@ const useBookSuggestion = (CurrentlyViewing) => {
         }
 
 
-    }, [isLoggedIn, userLoading, booksFromCategory, booksFromWriters, booksFromPublishers, interestedBooks, interest, interestLoading, categoryDetailsLoading, writersBooksLoading, publisherBooksLoading, booksLoading ]);
+    }, [isLoggedIn, userLoading, booksFromCategory, booksFromWriters, booksFromPublishers, interestedBooks, interest, interestLoading, categoryDetailsLoading, writersBooksLoading, publisherBooksLoading, booksLoading]);
 
-    // --------------------------------------------------
 
+    // ------------------If top tear has no data------------------
 
     useEffect(() => {
         let timeoutId;
         if (
-            booksLoading  === false  &&
-            categoryDetailsLoading  === false  &&
-            writersBooksLoading  === false &&
-            publisherBooksLoading  === false &&
+            booksLoading === false &&
+            categoryDetailsLoading === false &&
+            writersBooksLoading === false &&
+            publisherBooksLoading === false &&
             topTearSuggestionsLoading === false &&
             userLoading === false &&
             interestLoading === false &&
@@ -357,23 +354,49 @@ const useBookSuggestion = (CurrentlyViewing) => {
             // Debounce the fetchBuyBooks function
             timeoutId = setTimeout(async () => {
                 try {
-                    const response = await axiosPublic.get(`/api/v1/buy-books`);
-                    if (response?.status !== 200) {
-                        throw new Error('Failed to fetch buy books');
+                    const [buyBooksResponse, topSellingBooksResponse] = await Promise.all([
+                        axiosPublic.get(`/api/v1/buy-books`),
+                        axiosPublic.get(`/api/v1/top-selling-books`)
+                    ]);
+
+                    if (buyBooksResponse?.status !== 200 || topSellingBooksResponse?.status !== 200) {
+                        throw new Error('Failed to fetch buy books or top selling books');
                     }
-                    let buyBooksData = response?.data?.buyBooks || [];
+
+                    let buyBooksData = buyBooksResponse?.data?.buyBooks || [];
+                    let topSellingBooksData = topSellingBooksResponse?.data?.topSellingBooks || [];
+
+                    // Remove books from buyBooksData that are present in topSellingBooksData
+                    buyBooksData = buyBooksData.filter(book => !topSellingBooksData.some(topBook => topBook.bookId === book._id));
+
                     // Shuffle the buyBooksData array
                     for (let i = buyBooksData.length - 1; i > 0; i--) {
                         const j = Math.floor(Math.random() * (i + 1));
                         [buyBooksData[i], buyBooksData[j]] = [buyBooksData[j], buyBooksData[i]];
                     }
-                    setTopTearSuggestions(buyBooksData);
+
+                    // Shuffle the topSellingBooksData array
+                    for (let i = topSellingBooksData.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [topSellingBooksData[i], topSellingBooksData[j]] = [topSellingBooksData[j], topSellingBooksData[i]];
+                    }
+
+                    // Combine both arrays
+                    const combinedBooksData = [...buyBooksData, ...topSellingBooksData];
+
+                    // Shuffle the combined array
+                    for (let i = combinedBooksData.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [combinedBooksData[i], combinedBooksData[j]] = [combinedBooksData[j], combinedBooksData[i]];
+                    }
+
+                    setTopTearSuggestions(combinedBooksData);
                 } catch (error) {
-                    console.error("Error fetching buy books:", error);
+                    console.error("Error fetching buy books or top selling books:", error);
                 } finally {
                     setSuggestionsLoading(false);
                 }
-            }, 1000); 
+            }, 1000);
         }
 
         // Cleanup function to clear the timeout on component unmount or dependency change
@@ -381,8 +404,6 @@ const useBookSuggestion = (CurrentlyViewing) => {
             clearTimeout(timeoutId);
         };
     }, [axiosPublic, booksLoading, interestLoading, categoryDetailsLoading, writersBooksLoading, publisherBooksLoading, topTearSuggestionsLoading, userLoading, topTearSuggestions]);
-
-
 
 
     // ----------------Suggestions Loading----------------

@@ -149,6 +149,24 @@ Settings:root {
 }
 
 /* Styles */
+
+.top-selling-label {
+  position: absolute;
+  top: 2%;
+  left: 0%;
+  padding: 7px 0px 7px 0px;
+  display: flex;
+  gap: 5px;
+  color: var(--price-tag-color);
+  border-radius: 0 var(--price-tag-corner) var(--price-tag-corner) 0;
+  background-color: var(--price-tag-background);
+  line-height: 1;
+  box-shadow: 0 1px 5px #252424;
+  z-index: 200;
+  padding-left: 12px;
+}
+
+
 .price-tag {
   position: absolute;
   top: 2%;
