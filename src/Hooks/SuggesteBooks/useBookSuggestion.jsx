@@ -1,3 +1,5 @@
+"use client"
+
 // useBookSuggestion.js
 import { useCallback, useContext, useEffect, useState } from 'react';
 import useOneUser from '../Users/useOneUser';
@@ -7,7 +9,7 @@ import { AuthContext } from '@/providers/AuthProvider';
 
 const useBookSuggestion = (CurrentlyViewing) => {
     const { isLoggedIn, loading: userLoading } = useContext(AuthContext);
-    const { interest } = useOneUser();
+    const { interest, isLoading: interestLoading } = useOneUser();
     const axiosPublic = useAxiosPublic();
     const [booksFromCategory, setBooksFromCategory] = useState([]);
     const [booksFromWriters, setBooksFromWriters] = useState([]);
@@ -29,7 +31,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
     const { data: categoryDetails = [], isLoading: categoryDetailsLoading } = useQuery({
         queryKey: ['categoryDetails', interest?.category],
         queryFn: async () => {
-            if (isLoggedIn && interest?.category && interest?.category?.length > 0 && userLoading === false) {
+            if (isLoggedIn && interest?.category && interest?.category?.length > 0 && userLoading === false && interestLoading === false) {
                 const categoryDetailsPromises = interest.category.map(async (categoryName) => {
                     try {
                         const response = await axiosPublic.get(`/api/v1/category/${categoryName}`);
@@ -62,7 +64,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
     const { data: writersBooks = [], isLoading: writersBooksLoading } = useQuery({
         queryKey: ['writersBooks', interest?.writer],
         queryFn: async () => {
-            if (isLoggedIn && interest?.writer && interest?.writer?.length > 0 && userLoading === false) {
+            if (isLoggedIn && interest?.writer && interest?.writer?.length > 0 && userLoading === false && interestLoading === false) {
                 const writersBooksPromises = interest.writer.map(async (writerName) => {
                     try {
                         const response = await axiosPublic.get(`/api/v1/writer/${writerName}`);
@@ -95,7 +97,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
     const { data: publisherBooks = [], isLoading: publisherBooksLoading } = useQuery({
         queryKey: ['publisherBooks', interest?.publisher],
         queryFn: async () => {
-            if (isLoggedIn && interest?.publisher && interest?.publisher?.length > 0 && userLoading === false) {
+            if (isLoggedIn && interest?.publisher && interest?.publisher?.length > 0 && userLoading === false && interestLoading === false) {
                 const publisherBooksPromises = interest.publisher.map(async (publisherName) => {
                     try {
                         const response = await axiosPublic.get(`/api/v1/publisher/${publisherName}`);
@@ -128,7 +130,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
     const { data: bookDetails = [], isLoading: booksLoading } = useQuery({
         queryKey: ["bookDetails", interest?.book],
         queryFn: async () => {
-            if (isLoggedIn && interest?.book && interest?.book?.length > 0 && userLoading === false) {
+            if (isLoggedIn && interest?.book && interest?.book?.length > 0 && userLoading === false && interestLoading === false) {
                 const bookDetailsPromises = interest.book.map(async (_id) => {
                     try {
                         const response = await axiosPublic.get(`/api/v1/buy-books/${_id}`);
@@ -259,12 +261,17 @@ const useBookSuggestion = (CurrentlyViewing) => {
 
     // ----------------Top tier books----------------
 
+
+
+
     useEffect(() => {
         if (isLoggedIn === true &&
             userLoading === false &&
-            interest?.book?.length > 0 &&
-            interest?.publisher?.length > 0 &&
-            interest?.category?.length > 0) {
+            interestLoading === false &&
+            categoryDetailsLoading  === false &&
+            writersBooksLoading  === false &&
+            publisherBooksLoading  === false &&
+            booksLoading  === false) {
 
             const filteredBooks = [];
 
@@ -319,14 +326,16 @@ const useBookSuggestion = (CurrentlyViewing) => {
                 [shuffledBooks[i], shuffledBooks[j]] = [shuffledBooks[j], shuffledBooks[i]];
             }
 
-            setTopTearSuggestionsLoading(false);
             setTopTearSuggestions(shuffledBooks);
+
+            setTopTearSuggestionsLoading(false);
 
         } else {
             setTopTearSuggestionsLoading(false);
         }
 
-    }, [isLoggedIn, userLoading, booksFromCategory, booksFromWriters, booksFromPublishers, interestedBooks, interest]);
+
+    }, [isLoggedIn, userLoading, booksFromCategory, booksFromWriters, booksFromPublishers, interestedBooks, interest, interestLoading, categoryDetailsLoading, writersBooksLoading, publisherBooksLoading, booksLoading ]);
 
     // --------------------------------------------------
 
@@ -334,13 +343,14 @@ const useBookSuggestion = (CurrentlyViewing) => {
     useEffect(() => {
         let timeoutId;
         if (
-            !booksLoading &&
-            !categoryDetailsLoading &&
-            !writersBooksLoading &&
-            !publisherBooksLoading &&
-            !topTearSuggestionsLoading &&
-            !userLoading &&
-            topTearSuggestions.length === 0
+            booksLoading  === false  &&
+            categoryDetailsLoading  === false  &&
+            writersBooksLoading  === false &&
+            publisherBooksLoading  === false &&
+            topTearSuggestionsLoading === false &&
+            userLoading === false &&
+            interestLoading === false &&
+            topTearSuggestions.length <= 0
         ) {
             setSuggestionsLoading(true);
             // Debounce the fetchBuyBooks function
@@ -362,14 +372,14 @@ const useBookSuggestion = (CurrentlyViewing) => {
                 } finally {
                     setSuggestionsLoading(false);
                 }
-            }, 1000); // Adjust the debounce delay as needed
+            }, 1000); 
         }
 
         // Cleanup function to clear the timeout on component unmount or dependency change
         return () => {
             clearTimeout(timeoutId);
         };
-    }, [axiosPublic, booksLoading, categoryDetailsLoading, writersBooksLoading, publisherBooksLoading, topTearSuggestionsLoading, userLoading, topTearSuggestions]);
+    }, [axiosPublic, booksLoading, interestLoading, categoryDetailsLoading, writersBooksLoading, publisherBooksLoading, topTearSuggestionsLoading, userLoading, topTearSuggestions]);
 
 
 

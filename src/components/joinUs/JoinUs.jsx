@@ -18,7 +18,7 @@ import Link from "next/link";
 const JoinUs = () => {
   const { register, handleSubmit, reset } = useForm();
   // const { createUser, signin, googleLogin } = useAuth();
-  const { createUser, signin, googleLogin, updateUserProfiole } =
+  const { createUser, signin, googleLogin, updateUserProfile } =
     useContext(AuthContext);
 
   const router = useRouter();
@@ -60,7 +60,7 @@ const JoinUs = () => {
     const userInfo = { name, email, password, isFirstLogin: true };
 
     createUser(email, password).then(async (res) => {
-      const updateName = await updateUserProfiole(name);
+      const updateName = await updateUserProfile(name);
       if (res.user) {
         reset();
         const res = await axiosPublic.post("/api/v1/users", userInfo);
