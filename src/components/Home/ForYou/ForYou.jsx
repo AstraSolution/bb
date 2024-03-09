@@ -9,13 +9,14 @@ import "swiper/css/bundle";
 import { FiArrowUpRight } from "react-icons/fi";
 import ComponentLoading from "@/components/Shared/loadingPageBook/ComponentLoading";
 import useBookSuggestion from "@/Hooks/SuggesteBooks/useBookSuggestion";
+import BookCardSkeleton from "@/components/Skeleton/BookCardSkeleton";
 
 
 export default function ForYou() {
     const [swiperInitialized, setSwiperInitialized] = useState(false);
     const [swiper, setSwiper] = useState(null);
-    const {topTearSuggestions, suggetionsLoading} = useBookSuggestion()
-    
+    const { topTearSuggestions, suggetionsLoading } = useBookSuggestion()
+
     const handleNextButtonClick = () => {
         if (swiper) {
             swiper.slideNext();
@@ -41,8 +42,14 @@ export default function ForYou() {
         }
     }, [swiper]);
 
-    if( suggetionsLoading ) {
-        <div><ComponentLoading/></div>
+    if (suggetionsLoading || topTearSuggestions.length <= 0) {
+        return (
+            <div className="container mx-auto grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                {Array.from(Array(6).keys()).map((index) => (
+                    <BookCardSkeleton key={index} />
+                ))}
+            </div>
+        );
     }
 
 
@@ -84,7 +91,11 @@ export default function ForYou() {
                         </SwiperSlide>
                     ))
                 ) : (
-                    <ComponentLoading />
+                    <div className="container mx-auto grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                        {Array.from(Array(6).keys()).map((index) => (
+                            <BookCardSkeleton key={index} />
+                        ))}
+                    </div>
                 )}
             </Swiper>
         </div>

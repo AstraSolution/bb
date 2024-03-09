@@ -10,7 +10,7 @@ import useBookSuggestion from "@/Hooks/SuggesteBooks/useBookSuggestion";
 const SuggestedBooks = ({ CurrentlyViewing }) => {
   const [swiperInitialized, setSwiperInitialized] = useState(false);
   const [swiper, setSwiper] = useState(null);
-  const { interestedBooks, topTearSuggestions, suggetionsLoading } =
+  const { topTearSuggestions, suggetionsLoading } =
     useBookSuggestion(CurrentlyViewing);
 
   const handleNextButtonClick = () => {
@@ -36,7 +36,7 @@ const SuggestedBooks = ({ CurrentlyViewing }) => {
     }
   }, [swiper]);
 
-  if (suggetionsLoading) {
+  if (suggetionsLoading ) {
     return (
       <div className="my-20">
         <ComponentLoading />
