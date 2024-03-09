@@ -73,15 +73,18 @@ const AuthProvider = ({ children }) => {
     };
   }, [axiosPublic]);
 
+
   // create User
-  const createUser = (email, password) => {
+  const createUser = async (email, password) => {
     setLoading(true);
-    return createUserWithEmailAndPassword(auth, email, password)
-      .then(() => setLoading(false)) // Set loading to false after user creation
-      .catch(error => {
-        setLoading(false); // Set loading to false in case of error
-        throw error;
-      });
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      setLoading(false);
+      return { user: userCredential.user }; // Return an object with the user property
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
   };
 
   // update user profile
@@ -129,7 +132,6 @@ const AuthProvider = ({ children }) => {
     signin,
     logOut,
     loading,
-    handleUpdateProfile: updateUserProfile, // corrected function name
     updateUserProfile,
     isLoggedIn,
   };
