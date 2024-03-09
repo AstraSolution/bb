@@ -261,9 +261,6 @@ const useBookSuggestion = (CurrentlyViewing) => {
 
     // ----------------Top tier books----------------
 
-
-
-
     useEffect(() => {
         if (isLoggedIn === true &&
             userLoading === false &&
@@ -337,7 +334,8 @@ const useBookSuggestion = (CurrentlyViewing) => {
 
     }, [isLoggedIn, userLoading, booksFromCategory, booksFromWriters, booksFromPublishers, interestedBooks, interest, interestLoading, categoryDetailsLoading, writersBooksLoading, publisherBooksLoading, booksLoading]);
 
-    // --------------------------------------------------
+
+    // ------------------If top tear has no data------------------
 
     useEffect(() => {
         let timeoutId;
@@ -406,10 +404,6 @@ const useBookSuggestion = (CurrentlyViewing) => {
             clearTimeout(timeoutId);
         };
     }, [axiosPublic, booksLoading, interestLoading, categoryDetailsLoading, writersBooksLoading, publisherBooksLoading, topTearSuggestionsLoading, userLoading, topTearSuggestions]);
-
-
-
-
 
 
     // ----------------Suggestions Loading----------------

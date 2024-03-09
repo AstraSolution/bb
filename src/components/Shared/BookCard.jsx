@@ -30,16 +30,125 @@ export default function ExchangeCard({ item }) {
   const filteredData = wishListBook.filter((book) => book.book_id === _id);
 
   const handleAddToWishlist = () => {
-    // Add to wishlist logic
+    if (!isLoggedIn) {
+      Swal.fire({
+        icon: 'info',
+        title: 'Login Required',
+        text: 'You need to log in to add items to your wishlist.',
+        showCancelButton: true,
+        confirmButtonText: 'Login',
+        cancelButtonText: 'Cancel',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          router.push('/joinUs');
+        }
+      });
+      return; 
+    }
+    const user_name = currentUser?.name;
+    const quantity = 1;
+
+    const wishlistData = {
+      user_name,
+      user_email,
+      owner_email,
+      book_id: _id,
+      title,
+      cover_image,
+      writer,
+      unit_price: price,
+      total_price: price,
+      quantity,
+      isDeliverd: false,
+    };
+
+    // add operation
+    axiosSecure
+      .post("/api/v1/wishlist", wishlistData)
+      .then((response) => {
+        refetch();
+      })
+      .catch((error) => {
+        console.error("Error adding to wishlist:", error);
+      });
   };
 
+  // delete operation
   const handleBookDelete = () => {
-    // Delete book from wishlist logic
+    axiosSecure
+      .delete(`/api/v1/wishlist/remove/${filteredData[0]._id}`)
+      .then((response) => {
+        refetch();
+      })
+      .catch((error) => {
+        console.error("Error removing item from wishlist:", error);
+      });
   };
 
+  // Handle add to cart
   const handleCart = () => {
-    // Add to cart logic
+
+    if (!isLoggedIn) {
+      Swal.fire({
+        icon: 'info',
+        title: 'Login Required',
+        text: 'You need to log in to add items to your wishlist.',
+        showCancelButton: true,
+        confirmButtonText: 'Login',
+        cancelButtonText: 'Cancel',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          router.push('/joinUs');
+        }
+      });
+      return; 
+    }
+
+    const user_name = currentUser?.name;
+    const user_email = currentUser?.email;
+    const book_id = _id;
+    const bookPrice = price;
+    const quantity = 1;
+
+    const addCart = {
+      user_name,
+      user_email,
+      owner_email: owner_email,
+      book_id,
+      unit_price: bookPrice,
+      total_price: bookPrice,
+      quantity,
+      isDeliverd: false,
+      cover_image: cover_image,
+      title: title,
+      stock_limit: stock_limit,
+    };
+
+    axiosSecure
+      .post("/api/v1/carts", addCart)
+      .then((response) => {
+        if (response.status === 200) {
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Add book in the cart.",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          cartRefetch();
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'There was an error!',
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
+
 
   const isTopSelling = item.hasOwnProperty("totalQuantity");
 
