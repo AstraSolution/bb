@@ -272,7 +272,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
             writersBooksLoading  === false &&
             publisherBooksLoading  === false &&
             booksLoading  === false) {
-
+                
             const filteredBooks = [];
 
             booksFromCategory?.forEach(book => {
@@ -353,6 +353,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
             topTearSuggestions.length <= 0
         ) {
             setSuggestionsLoading(true);
+
             // Debounce the fetchBuyBooks function
             timeoutId = setTimeout(async () => {
                 try {

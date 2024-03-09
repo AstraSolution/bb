@@ -1,5 +1,4 @@
 "use client";
-
 import useAxiosPublic from "@/Hooks/Axios/useAxiosPublic";
 import { AuthContext } from "@/providers/AuthProvider";
 import { useRouter } from "next/navigation";
@@ -8,7 +7,7 @@ import Swal from "sweetalert2";
 
 
 const SocialLogin = () => {
-  const { googleLogin } = useContext(AuthContext);
+  const { googleLogin, facebookLogin, twitterSignIn } = useContext(AuthContext);
   const router = useRouter();
   const axiosPublic = useAxiosPublic();
 
@@ -16,9 +15,9 @@ const SocialLogin = () => {
     try {
       const res = await user();
 
-      // if (res.user) {
-      //   Swal.fire("User logged in successfully");
-      // }
+      if (res.user) {
+        Swal.fire("User logged in successfully");
+      }
 
       const userInfo = {
         email: res?.user?.email,
@@ -58,4 +57,3 @@ const SocialLogin = () => {
 };
 
 export default SocialLogin;
-

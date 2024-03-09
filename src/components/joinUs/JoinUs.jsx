@@ -18,7 +18,7 @@ import Link from "next/link";
 const JoinUs = () => {
   const { register, handleSubmit, reset } = useForm();
   // const { createUser, signin, googleLogin } = useAuth();
-  const { createUser, signin, googleLogin, updateUserProfile } =
+  const { createUser, signin, googleLogin, updateUserProfiole } =
     useContext(AuthContext);
 
   const router = useRouter();
@@ -60,7 +60,7 @@ const JoinUs = () => {
     const userInfo = { name, email, password, isFirstLogin: true };
 
     createUser(email, password).then(async (res) => {
-      const updateName = await updateUserProfile(name);
+      const updateName = await updateUserProfiole(name);
       if (res.user) {
         reset();
         const res = await axiosPublic.post("/api/v1/users", userInfo);
@@ -81,28 +81,28 @@ const JoinUs = () => {
     });
   };
 
-  // const handleSocialLogin = (user) => {
-  //   user()
-  //     .then((res) => {
-  //       if (res.user) {
-  //         toast.success("User logged in successfully", {
-  //           position: "top-center",
-  //         });
-  //       }
+  const handleSocialLogin = (user) => {
+    user()
+      .then((res) => {
+        if (res.user) {
+          toast.success("User logged in successfully", {
+            position: "top-center",
+          });
+        }
 
-  //       const userInfo = {
-  //         email: res.user?.email,
-  //         name: res.user?.displayName,
-  //       };
+        const userInfo = {
+          email: res.user?.email,
+          name: res.user?.displayName,
+        };
 
-  //       axiosPublic.post("/users", userInfo).then((res) => {
-  //         router.push("/");
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       Swal.fire(error);
-  //     });
-  // };
+        axiosPublic.post("/users", userInfo).then((res) => {
+          router.push("/");
+        });
+      })
+      .catch((error) => {
+        Swal.fire(error);
+      });
+  };
 
   return (
     <>
