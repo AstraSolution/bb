@@ -16,6 +16,7 @@ import {
 import PropTypes from "prop-types";
 import { createContext, useEffect, useState } from "react";
 
+
 export const AuthContext = createContext("");
 
 const AuthProvider = ({ children }) => {
@@ -30,9 +31,9 @@ const AuthProvider = ({ children }) => {
   const googleLogin = () => {
     setLoading(true);
     return signInWithPopup(auth, googleProvider)
-      .then(() => setLoading(false)) // Set loading to false after login
+      .finally(() => setLoading(false))
       .catch(error => {
-        setLoading(false); // Set loading to false in case of error
+        setLoading(false);
         throw error;
       });
   };
@@ -41,23 +42,79 @@ const AuthProvider = ({ children }) => {
   const githubLogin = () => {
     setLoading(true);
     return signInWithPopup(auth, githubProvider)
-      .then(() => setLoading(false)) // Set loading to false after login
+      .finally(() => setLoading(false))
       .catch(error => {
-        setLoading(false); // Set loading to false in case of error
+        setLoading(false);
         throw error;
       });
   };
 
-  // Function to check if user is logged in
-  useEffect(() => {
-    setIsLoggedIn(!!user); // Set isLoggedIn to true if user exists
-  }, [user]);
+  // create User
+  const createUser = (email, password) => {
+    setLoading(true);
+    return createUserWithEmailAndPassword(auth, email, password)
+      .finally(() => setLoading(false))
+      .catch(error => {
+        setLoading(false);
+        throw error;
+      });
+  };
+
+  const handleUpdateProfile = (name, photo) => {
+    setLoading(true);
+    return updateProfile(auth.currentUser, {
+      displayName: name,
+      photoURL: photo,
+    })
+      .finally(() => setLoading(false))
+      .catch(error => {
+        setLoading(false);
+        throw error;
+      });
+  };
+
+  // update user profile
+  const updateUserProfiole = (name) => {
+    setLoading(true);
+    return updateProfile(auth.currentUser, {
+      displayName: name,
+    })
+      .finally(() => setLoading(false))
+      .catch(error => {
+        setLoading(false);
+        throw error;
+      });
+  };
+
+  // loging Account
+  const signin = (email, password) => {
+    setLoading(true);
+    return signInWithEmailAndPassword(auth, email, password)
+      .finally(() => setLoading(false))
+      .catch(error => {
+        setLoading(false);
+        throw error;
+      });
+  };
+
+  // logOut account
+  const logOut = async () => {
+    setLoading(true);
+    Cookies.remove("token", { path: "/", secure: false, sameSite: "Strict" });
+    localStorage.removeItem("email");
+    return signOut(auth)
+      .finally(() => setLoading(false))
+      .catch(error => {
+        setLoading(false);
+        throw error;
+      });
+  };
 
   // using Observer to listen to user authentication changes
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, user => {
       setUser(user);
-      setLoading(false); // Set loading to false after user state is updated
+      setLoading(false);
       localStorage.setItem("email", user?.email);
       if (user?.email) {
         const userEmail = { email: user?.email };
@@ -73,56 +130,10 @@ const AuthProvider = ({ children }) => {
     };
   }, [axiosPublic]);
 
-
-  // create User
-  const createUser = async (email, password) => {
-    setLoading(true);
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      setLoading(false);
-      return { user: userCredential.user }; // Return an object with the user property
-    } catch (error) {
-      setLoading(false);
-      throw error;
-    }
-  };
-
-  // update user profile
-  const updateUserProfile = (name) => {
-    setLoading(true);
-    return updateProfile(auth.currentUser, {
-      displayName: name,
-    })
-      .then(() => setLoading(false)) // Set loading to false after profile update
-      .catch(error => {
-        setLoading(false); // Set loading to false in case of error
-        throw error;
-      });
-  };
-
-  // loging Account
-  const signin = (email, password) => {
-    setLoading(true);
-    return signInWithEmailAndPassword(auth, email, password)
-      .then(() => setLoading(false)) // Set loading to false after login
-      .catch(error => {
-        setLoading(false); // Set loading to false in case of error
-        throw error;
-      });
-  };
-
-  // logOut account
-  const logOut = async () => {
-    setLoading(true);
-    Cookies.remove("token", { path: "/", secure: false, sameSite: "Strict" });
-    localStorage.removeItem("email");
-    return signOut(auth)
-      .then(() => setLoading(false)) // Set loading to false after logout
-      .catch(error => {
-        setLoading(false); // Set loading to false in case of error
-        throw error;
-      });
-  };
+  // Function to check if user is logged in
+  useEffect(() => {
+    setIsLoggedIn(!!user);
+  }, [user]);
 
   const authentication = {
     googleLogin,
@@ -132,7 +143,8 @@ const AuthProvider = ({ children }) => {
     signin,
     logOut,
     loading,
-    updateUserProfile,
+    handleUpdateProfile,
+    updateUserProfiole,
     isLoggedIn,
   };
 
