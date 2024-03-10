@@ -1,4 +1,3 @@
-
 import { useCallback, useContext, useEffect, useState } from 'react';
 import useOneUser from '../Users/useOneUser';
 import { useQuery } from "@tanstack/react-query";
@@ -260,7 +259,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
     // ----------------top Selling Books----------------
 
     const [topSellingBooks, setTopSellingBooks] = useState([]);
-    const [topSellingBooksLoading, setTopSellingBooksLoading] = useState(true); 
+    const [topSellingBooksLoading, setTopSellingBooksLoading] = useState(true);
 
     useQuery({
         queryKey: ["topSellingBooks"],
@@ -367,17 +366,23 @@ const useBookSuggestion = (CurrentlyViewing) => {
             }) : [];
 
 
-            transformedTopSellingBooks?.forEach(book => {
-                if (
-                    interest?.writer?.includes(book?.bookDetails?.writer) ||
-                    interest?.publisher?.includes(book?.bookDetails?.publisher) ||
-                    interest?.category?.includes(book?.bookDetails?.category) ||
-                    interest?.book?.includes(book?.bookDetails?._id)
-                ) {
-                    filteredBooks.push(book);
-                }
-            });
+            if (booksFromCategory.length > 0 ||
+                booksFromWriters.length > 0 ||
+                booksFromPublishers.length > 0 ||
+                interestedBooks.length > 0 ||
+                transformedTopSellingBooks.length > 0) {
+                transformedTopSellingBooks?.forEach(book => {
+                    if (
+                        interest?.writer?.includes(book?.bookDetails?.writer) ||
+                        interest?.publisher?.includes(book?.bookDetails?.publisher) ||
+                        interest?.category?.includes(book?.bookDetails?.category) ||
+                        interest?.book?.includes(book?.bookDetails?._id)
+                    ) {
+                        filteredBooks.push(book);
+                    }
+                });
 
+            }
 
             // Get unique book IDs from both filteredBooks and transformedTopSellingBooks
             const allBookIds = [
@@ -433,6 +438,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
             topTearSuggestionsLoading === false &&
             userLoading === false &&
             interestLoading === false &&
+            topSellingBooksLoading === false &&
             topTearSuggestions.length <= 0
         ) {
             setSuggestionsLoading(true);
@@ -440,20 +446,16 @@ const useBookSuggestion = (CurrentlyViewing) => {
             // Debounce the fetchBuyBooks function
             timeoutId = setTimeout(async () => {
                 try {
-                    const [buyBooksResponse, topSellingBooksResponse] = await Promise.all([
-                        axiosPublic.get(`/api/v1/buy-books`),
-                        axiosPublic.get(`/api/v1/top-selling-books`)
-                    ]);
+                    const buyBooksResponse = await axiosPublic.get(`/api/v1/buy-books`);
 
-                    if (buyBooksResponse?.status !== 200 || topSellingBooksResponse?.status !== 200) {
-                        throw new Error('Failed to fetch buy books or top selling books');
+                    if (buyBooksResponse?.status !== 200) {
+                        throw new Error('Failed to fetch buy books');
                     }
 
                     let buyBooksData = buyBooksResponse?.data?.buyBooks || [];
-                    let topSellingBooksData = topSellingBooksResponse?.data?.topSellingBooks || [];
 
-                    // Remove books from buyBooksData that are present in topSellingBooksData
-                    buyBooksData = buyBooksData.filter(book => !topSellingBooksData.some(topBook => topBook.bookId === book._id));
+                    // Remove books from buyBooksData that are present in topSellingBooks
+                    buyBooksData = buyBooksData.filter(book => !topSellingBooks.some(topBook => topBook.bookId === book._id));
 
                     // Shuffle the buyBooksData array
                     for (let i = buyBooksData.length - 1; i > 0; i--) {
@@ -461,14 +463,8 @@ const useBookSuggestion = (CurrentlyViewing) => {
                         [buyBooksData[i], buyBooksData[j]] = [buyBooksData[j], buyBooksData[i]];
                     }
 
-                    // Shuffle the topSellingBooksData array
-                    for (let i = topSellingBooksData.length - 1; i > 0; i--) {
-                        const j = Math.floor(Math.random() * (i + 1));
-                        [topSellingBooksData[i], topSellingBooksData[j]] = [topSellingBooksData[j], topSellingBooksData[i]];
-                    }
-
                     // Combine both arrays
-                    const combinedBooksData = [...buyBooksData, ...topSellingBooksData];
+                    const combinedBooksData = [...buyBooksData, ...topSellingBooks];
 
                     // Shuffle the combined array
                     for (let i = combinedBooksData.length - 1; i > 0; i--) {
@@ -478,7 +474,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
 
                     setTopTearSuggestions(combinedBooksData);
                 } catch (error) {
-                    console.error("Error fetching buy books or top selling books:", error);
+                    console.error("Error fetching buy books:", error);
                 } finally {
                     setSuggestionsLoading(false);
                 }
@@ -489,7 +485,8 @@ const useBookSuggestion = (CurrentlyViewing) => {
         return () => {
             clearTimeout(timeoutId);
         };
-    }, [axiosPublic, booksLoading, interestLoading, categoryDetailsLoading, writersBooksLoading, publisherBooksLoading, topTearSuggestionsLoading, userLoading, topTearSuggestions]);
+    }, [axiosPublic, booksLoading, interestLoading, topSellingBooksLoading, categoryDetailsLoading, writersBooksLoading, publisherBooksLoading, topTearSuggestionsLoading, userLoading, topTearSuggestions, topSellingBooks]);
+
 
 
     // ----------------Suggestions Loading----------------
