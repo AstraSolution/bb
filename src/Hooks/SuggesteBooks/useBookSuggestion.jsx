@@ -1,6 +1,4 @@
-"use client"
 
-// useBookSuggestion.js
 import { useCallback, useContext, useEffect, useState } from 'react';
 import useOneUser from '../Users/useOneUser';
 import { useQuery } from "@tanstack/react-query";
@@ -259,6 +257,32 @@ const useBookSuggestion = (CurrentlyViewing) => {
     }, [currentlyViewingBookDetails, currentlyViewingBookLoading, fetchRelatedBooks]);
 
 
+    // ----------------top Selling Books----------------
+
+    const [topSellingBooks, setTopSellingBooks] = useState([]);
+    const [topSellingBooksLoading, setTopSellingBooksLoading] = useState(true); 
+
+    useQuery({
+        queryKey: ["topSellingBooks"],
+        queryFn: async () => {
+            try {
+                const response = await axiosPublic.get(`/api/v1/top-selling-books`);
+                if (response.status !== 200) {
+                    throw new Error('Failed to fetch book details');
+                }
+                setTopSellingBooks(response?.data?.topSellingBooks);
+                setTopSellingBooksLoading(false);
+                return response?.data;
+            } catch (error) {
+                console.error(error);
+                setTopSellingBooksLoading(false);
+                return null;
+            }
+        },
+    });
+
+
+
     // ----------------Top tier books----------------
 
     useEffect(() => {
@@ -268,7 +292,8 @@ const useBookSuggestion = (CurrentlyViewing) => {
             categoryDetailsLoading === false &&
             writersBooksLoading === false &&
             publisherBooksLoading === false &&
-            booksLoading === false) {
+            booksLoading === false &&
+            topSellingBooksLoading === false) {
 
             const filteredBooks = [];
 
@@ -312,10 +337,71 @@ const useBookSuggestion = (CurrentlyViewing) => {
                 }
             });
 
-            const uniqueBooks = Array.from(new Set(filteredBooks?.map(book => book?._id))).map(_id => {
-                return filteredBooks?.find(book => book?._id === _id);
+
+            const transformedTopSellingBooks = Array.isArray(topSellingBooks) ? topSellingBooks.map(item => {
+                return {
+                    bookId: item?.bookId,
+                    totalQuantity: item?.totalQuantity,
+                    bookDetails: {
+                        tags: item?.bookDetails?.tags || [],
+                        awards: item?.bookDetails?.awards || [],
+                        recommended_for: item?.bookDetails?.recommended_for || [],
+                        _id: item?.bookDetails?._id,
+                        title: item?.bookDetails?.title,
+                        description: item?.bookDetails?.description,
+                        writer: item?.bookDetails?.writer,
+                        category: item?.bookDetails?.category,
+                        language: item?.bookDetails?.language,
+                        pages: item?.bookDetails?.pages,
+                        price: item?.bookDetails?.price,
+                        published_year: item?.bookDetails?.published_year,
+                        publisher: item?.bookDetails?.publisher,
+                        edition: item?.bookDetails?.edition,
+                        owner_email: item?.bookDetails?.owner_email,
+                        stock_limit: item?.bookDetails?.stock_limit,
+                        upload_time: item?.bookDetails?.upload_time,
+                        avg_rating: item?.bookDetails?.avg_rating,
+                        cover_image: item?.bookDetails?.cover_image
+                    }
+                };
+            }) : [];
+
+
+            transformedTopSellingBooks?.forEach(book => {
+                if (
+                    interest?.writer?.includes(book?.bookDetails?.writer) ||
+                    interest?.publisher?.includes(book?.bookDetails?.publisher) ||
+                    interest?.category?.includes(book?.bookDetails?.category) ||
+                    interest?.book?.includes(book?.bookDetails?._id)
+                ) {
+                    filteredBooks.push(book);
+                }
             });
 
+
+            // Get unique book IDs from both filteredBooks and transformedTopSellingBooks
+            const allBookIds = [
+                ...filteredBooks.map(book => book._id),
+                ...transformedTopSellingBooks.map(book => book.bookDetails._id)
+            ];
+
+            // Filter out duplicate book IDs
+            const uniqueBookIds = Array.from(new Set(allBookIds));
+
+            const uniqueBooks = uniqueBookIds.map(id => {
+                const regularBook = filteredBooks.find(book => book._id === id);
+                const topSellingBook = transformedTopSellingBooks.find(book => book.bookDetails._id === id);
+
+                // Prioritize top-selling books over regular books
+                if (topSellingBook) {
+                    return topSellingBook;
+                } else {
+                    return regularBook;
+                }
+            });
+
+
+            // Shuffle suggestions...
             const shuffledBooks = uniqueBooks.slice();
 
             for (let i = shuffledBooks.length - 1; i > 0; i--) {
@@ -332,7 +418,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
         }
 
 
-    }, [isLoggedIn, userLoading, booksFromCategory, booksFromWriters, booksFromPublishers, interestedBooks, interest, interestLoading, categoryDetailsLoading, writersBooksLoading, publisherBooksLoading, booksLoading]);
+    }, [isLoggedIn, userLoading, topSellingBooks, booksFromCategory, booksFromWriters, booksFromPublishers, interestedBooks, interest, interestLoading, categoryDetailsLoading, writersBooksLoading, publisherBooksLoading, booksLoading, topSellingBooksLoading]);
 
 
     // ------------------If top tear has no data------------------
