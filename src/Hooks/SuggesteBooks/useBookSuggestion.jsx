@@ -7,7 +7,7 @@ import useAxiosPublic from '../Axios/useAxiosPublic';
 import { AuthContext } from '@/providers/AuthProvider';
 
 const useBookSuggestion = (CurrentlyViewing) => {
-    const CACHE_KEY = 'categoryDetailsCache';
+    const CACHE_KEY_CATEGORY_DETAILS = 'categoryDetailsCache';
     const CACHE_KEY_WRITERS_BOOKS = 'writersBooksCache';
     const CACHE_KEY_PUBLISHER_BOOKS = 'publisherBooksCache';
     const CACHE_KEY_INTERESTED_BOOKS = 'interestedBooksCache';
@@ -35,39 +35,40 @@ const useBookSuggestion = (CurrentlyViewing) => {
 
 
     // ----------------Category Books----------------
-    
-    // Function to retrieve cached category books data from localStorage
-    const getCachedCategoryBooks = () => {
+
+
+    // Function to retrieve cached data from localStorage
+    const getCachedData = (CACHE_KEY) => {
         if (typeof window !== 'undefined') {
-            const cachedData = localStorage.getItem(CACHE_KEY_CATEGORY_BOOKS);
+            const cachedData = localStorage.getItem(CACHE_KEY);
             if (cachedData) {
                 const { data, timestamp } = JSON.parse(cachedData);
                 if (Date.now() - timestamp < CACHE_EXPIRATION_TIME) {
                     return data;
                 } else {
-                    localStorage.removeItem(CACHE_KEY_CATEGORY_BOOKS); // Remove expired cache
+                    localStorage.removeItem(CACHE_KEY); // Remove expired cache
                 }
             }
         }
         return null;
     };
 
-    // Function to save category books data to localStorage
-    const cacheCategoryBooks = (data) => {
+    // Function to save data to localStorage
+    const cacheData = (CACHE_KEY, data) => {
         if (typeof window !== 'undefined') {
             const cacheObject = {
                 data: data,
                 timestamp: Date.now()
             };
-            localStorage.setItem(CACHE_KEY_CATEGORY_BOOKS, JSON.stringify(cacheObject));
+            localStorage.setItem(CACHE_KEY, JSON.stringify(cacheObject));
         }
     };
 
-    const { data: categoryDetails = getCachedData(), isLoading: categoryDetailsLoading } = useQuery({
+    const { data: categoryDetails = getCachedData(CACHE_KEY_CATEGORY_DETAILS), isLoading: categoryDetailsLoading } = useQuery({
         queryKey: ['categoryDetails', interest?.category],
         queryFn: async () => {
             if (isLoggedIn && interest?.category && interest?.category?.length > 0 && userLoading === false && interestLoading === false) {
-                const cachedData = getCachedData();
+                const cachedData = getCachedData(CACHE_KEY_CATEGORY_DETAILS); // Pass the CACHE_KEY
                 if (cachedData) {
                     return cachedData;
                 }
@@ -86,7 +87,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
                 });
                 const categories = await Promise.all(categoryDetailsPromises);
                 const filteredCategories = categories.filter(category => category !== null).flatMap(category => category);
-                cacheData(filteredCategories); // Cache the fetched data
+                cacheData(CACHE_KEY_CATEGORY_DETAILS, filteredCategories); // Cache the fetched data with CACHE_KEY
                 return filteredCategories;
             } else {
                 return [];
