@@ -35,28 +35,32 @@ const useBookSuggestion = (CurrentlyViewing) => {
 
 
     // ----------------Category Books----------------
-
-    // Function to retrieve cached data from localStorage
-    const getCachedData = () => {
-        const cachedData = localStorage.getItem(CACHE_KEY);
-        if (cachedData) {
-            const { data, timestamp } = JSON.parse(cachedData);
-            if (Date.now() - timestamp < CACHE_EXPIRATION_TIME) {
-                return data;
-            } else {
-                localStorage.removeItem(CACHE_KEY); // Remove expired cache
+    
+    // Function to retrieve cached category books data from localStorage
+    const getCachedCategoryBooks = () => {
+        if (typeof window !== 'undefined') {
+            const cachedData = localStorage.getItem(CACHE_KEY_CATEGORY_BOOKS);
+            if (cachedData) {
+                const { data, timestamp } = JSON.parse(cachedData);
+                if (Date.now() - timestamp < CACHE_EXPIRATION_TIME) {
+                    return data;
+                } else {
+                    localStorage.removeItem(CACHE_KEY_CATEGORY_BOOKS); // Remove expired cache
+                }
             }
         }
         return null;
     };
 
-    // Function to save data to localStorage
-    const cacheData = (data) => {
-        const cacheObject = {
-            data: data,
-            timestamp: Date.now()
-        };
-        localStorage.setItem(CACHE_KEY, JSON.stringify(cacheObject));
+    // Function to save category books data to localStorage
+    const cacheCategoryBooks = (data) => {
+        if (typeof window !== 'undefined') {
+            const cacheObject = {
+                data: data,
+                timestamp: Date.now()
+            };
+            localStorage.setItem(CACHE_KEY_CATEGORY_BOOKS, JSON.stringify(cacheObject));
+        }
     };
 
     const { data: categoryDetails = getCachedData(), isLoading: categoryDetailsLoading } = useQuery({
@@ -99,27 +103,31 @@ const useBookSuggestion = (CurrentlyViewing) => {
 
     // ----------------Writers Books----------------
 
-    // Function to retrieve cached writers books data from localStorage
+    // Function to retrieve cached writer books data from localStorage
     const getCachedWritersBooks = () => {
-        const cachedData = localStorage.getItem(CACHE_KEY_WRITERS_BOOKS);
-        if (cachedData) {
-            const { data, timestamp } = JSON.parse(cachedData);
-            if (Date.now() - timestamp < CACHE_EXPIRATION_TIME) {
-                return data;
-            } else {
-                localStorage.removeItem(CACHE_KEY_WRITERS_BOOKS); // Remove expired cache
+        if (typeof window !== 'undefined') {
+            const cachedData = localStorage.getItem(CACHE_KEY_WRITERS_BOOKS);
+            if (cachedData) {
+                const { data, timestamp } = JSON.parse(cachedData);
+                if (Date.now() - timestamp < CACHE_EXPIRATION_TIME) {
+                    return data;
+                } else {
+                    localStorage.removeItem(CACHE_KEY_WRITERS_BOOKS); // Remove expired cache
+                }
             }
         }
         return null;
     };
 
-    // Function to save writers books data to localStorage
+    // Function to save writer books data to localStorage
     const cacheWritersBooks = (data) => {
-        const cacheObject = {
-            data: data,
-            timestamp: Date.now()
-        };
-        localStorage.setItem(CACHE_KEY_WRITERS_BOOKS, JSON.stringify(cacheObject));
+        if (typeof window !== 'undefined') {
+            const cacheObject = {
+                data: data,
+                timestamp: Date.now()
+            };
+            localStorage.setItem(CACHE_KEY_WRITERS_BOOKS, JSON.stringify(cacheObject));
+        }
     };
 
     const { data: writersBooks = getCachedWritersBooks(), isLoading: writersBooksLoading } = useQuery({
@@ -166,13 +174,15 @@ const useBookSuggestion = (CurrentlyViewing) => {
 
     // Function to retrieve cached publisher books data from localStorage
     const getCachedPublisherBooks = () => {
-        const cachedData = localStorage.getItem(CACHE_KEY_PUBLISHER_BOOKS);
-        if (cachedData) {
-            const { data, timestamp } = JSON.parse(cachedData);
-            if (Date.now() - timestamp < CACHE_EXPIRATION_TIME) {
-                return data;
-            } else {
-                localStorage.removeItem(CACHE_KEY_PUBLISHER_BOOKS); // Remove expired cache
+        if (typeof window !== 'undefined') {
+            const cachedData = localStorage.getItem(CACHE_KEY_PUBLISHER_BOOKS);
+            if (cachedData) {
+                const { data, timestamp } = JSON.parse(cachedData);
+                if (Date.now() - timestamp < CACHE_EXPIRATION_TIME) {
+                    return data;
+                } else {
+                    localStorage.removeItem(CACHE_KEY_PUBLISHER_BOOKS); // Remove expired cache
+                }
             }
         }
         return null;
@@ -180,12 +190,15 @@ const useBookSuggestion = (CurrentlyViewing) => {
 
     // Function to save publisher books data to localStorage
     const cachePublisherBooks = (data) => {
-        const cacheObject = {
-            data: data,
-            timestamp: Date.now()
-        };
-        localStorage.setItem(CACHE_KEY_PUBLISHER_BOOKS, JSON.stringify(cacheObject));
+        if (typeof window !== 'undefined') {
+            const cacheObject = {
+                data: data,
+                timestamp: Date.now()
+            };
+            localStorage.setItem(CACHE_KEY_PUBLISHER_BOOKS, JSON.stringify(cacheObject));
+        }
     };
+
 
     const { data: publisherBooks = getCachedPublisherBooks(), isLoading: publisherBooksLoading } = useQuery({
         queryKey: ['publisherBooks', interest?.publisher],
@@ -230,13 +243,15 @@ const useBookSuggestion = (CurrentlyViewing) => {
 
     // Function to retrieve cached interested books data from localStorage
     const getCachedInterestedBooks = () => {
-        const cachedData = localStorage.getItem(CACHE_KEY_INTERESTED_BOOKS);
-        if (cachedData) {
-            const { data, timestamp } = JSON.parse(cachedData);
-            if (Date.now() - timestamp < CACHE_EXPIRATION_TIME) {
-                return data;
-            } else {
-                localStorage.removeItem(CACHE_KEY_INTERESTED_BOOKS); // Remove expired cache
+        if (typeof window !== 'undefined') {
+            const cachedData = localStorage.getItem(CACHE_KEY_INTERESTED_BOOKS);
+            if (cachedData) {
+                const { data, timestamp } = JSON.parse(cachedData);
+                if (Date.now() - timestamp < CACHE_EXPIRATION_TIME) {
+                    return data;
+                } else {
+                    localStorage.removeItem(CACHE_KEY_INTERESTED_BOOKS); // Remove expired cache
+                }
             }
         }
         return null;
@@ -244,12 +259,15 @@ const useBookSuggestion = (CurrentlyViewing) => {
 
     // Function to save interested books data to localStorage
     const cacheInterestedBooks = (data) => {
-        const cacheObject = {
-            data: data,
-            timestamp: Date.now()
-        };
-        localStorage.setItem(CACHE_KEY_INTERESTED_BOOKS, JSON.stringify(cacheObject));
+        if (typeof window !== 'undefined') {
+            const cacheObject = {
+                data: data,
+                timestamp: Date.now()
+            };
+            localStorage.setItem(CACHE_KEY_INTERESTED_BOOKS, JSON.stringify(cacheObject));
+        }
     };
+
 
     const { data: bookDetails = getCachedInterestedBooks(), isLoading: booksLoading } = useQuery({
         queryKey: ["bookDetails", interest?.book],
@@ -392,16 +410,17 @@ const useBookSuggestion = (CurrentlyViewing) => {
 
     // ----------------top Selling Books----------------
 
-
     // Function to retrieve cached top selling books data from localStorage
     const getCachedTopSellingBooks = () => {
-        const cachedData = localStorage.getItem(CACHE_KEY_TOP_SELLING_BOOKS);
-        if (cachedData) {
-            const { data, timestamp } = JSON.parse(cachedData);
-            if (Date.now() - timestamp < CACHE_EXPIRATION_TIME) {
-                return data;
-            } else {
-                localStorage.removeItem(CACHE_KEY_TOP_SELLING_BOOKS); // Remove expired cache
+        if (typeof window !== 'undefined') {
+            const cachedData = localStorage.getItem(CACHE_KEY_TOP_SELLING_BOOKS);
+            if (cachedData) {
+                const { data, timestamp } = JSON.parse(cachedData);
+                if (Date.now() - timestamp < CACHE_EXPIRATION_TIME) {
+                    return data;
+                } else {
+                    localStorage.removeItem(CACHE_KEY_TOP_SELLING_BOOKS); // Remove expired cache
+                }
             }
         }
         return null;
@@ -409,12 +428,15 @@ const useBookSuggestion = (CurrentlyViewing) => {
 
     // Function to save top selling books data to localStorage
     const cacheTopSellingBooks = (data) => {
-        const cacheObject = {
-            data: data,
-            timestamp: Date.now()
-        };
-        localStorage.setItem(CACHE_KEY_TOP_SELLING_BOOKS, JSON.stringify(cacheObject));
+        if (typeof window !== 'undefined') {
+            const cacheObject = {
+                data: data,
+                timestamp: Date.now()
+            };
+            localStorage.setItem(CACHE_KEY_TOP_SELLING_BOOKS, JSON.stringify(cacheObject));
+        }
     };
+
 
     const { data: topSellingBooksData, isLoading: topSellingBooksLoading } = useQuery({
         queryKey: ["topSellingBooks"],
