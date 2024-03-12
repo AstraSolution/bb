@@ -18,6 +18,8 @@ const useBookSuggestion = (CurrentlyViewing) => {
     const { interest, isLoading: interestLoading } = useOneUser();
     const axiosPublic = useAxiosPublic();
 
+ 
+
     const [booksFromCategory, setBooksFromCategory] = useState([]);
     const [booksFromWriters, setBooksFromWriters] = useState([]);
     const [booksFromPublishers, setBooksFromPublishers] = useState([]);
@@ -360,7 +362,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
         };
 
         fetchRelatedBooksForAllBooks();
-    }, [interestedBooks, fetchRelatedBooks]);
+    }, [interestedBooks]);
 
 
     // ----------------Related Books of Currently Viewing Book----------------
@@ -697,13 +699,12 @@ const useBookSuggestion = (CurrentlyViewing) => {
 
     useEffect(() => {
         if (
-            relatedBooksLoading === false &&
             currentlyViewingRelatedLoading === false &&
             currentlyViewingBookLoading === false
         ) {
             setRelatedLoading(false);
         }
-    }, [relatedBooksLoading, currentlyViewingRelatedLoading, currentlyViewingBookLoading]);
+    }, [ currentlyViewingRelatedLoading, currentlyViewingBookLoading]);
 
     return { topTearSuggestions, currentlyViewingRelatedBooks, currentlyViewingRelatedLoading, interestedBooks, booksFromCategory, booksFromWriters, booksFromPublishers, suggestionsLoading, interestedBooksRelatedBooks, interestedBooksRelatedBooksLoading, relatedLoading };
 };
