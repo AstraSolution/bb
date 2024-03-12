@@ -67,7 +67,6 @@ const useBookSuggestion = (CurrentlyViewing) => {
     const { data: categoryDetails = getCachedData(CACHE_KEY_CATEGORY_DETAILS), isLoading: categoryDetailsLoading } = useQuery({
         queryKey: ['categoryDetails', interest?.category],
         queryFn: async () => {
-            console.log('fetiching')
             if (isLoggedIn && interest?.category && interest?.category?.length > 0 && userLoading === false && interestLoading === false) {
                 const cachedData = getCachedData(CACHE_KEY_CATEGORY_DETAILS); // Pass the CACHE_KEY
                 if (cachedData) {
