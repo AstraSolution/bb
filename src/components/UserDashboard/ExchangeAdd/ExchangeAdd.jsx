@@ -79,7 +79,7 @@ const ExchangeAdd = () => {
     };
 
     axiosSecure.post(
-      "https://boi-binimoy-server.vercel.app/api/v1/exchange-books",
+      "https://boi-binimoy-server-ashy.vercel.app/api/v1/exchange-books",
       newBook
     )
       .then((response) => {

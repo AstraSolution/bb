@@ -24,7 +24,7 @@ const WriterDetails = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `https://boi-binimoy-server.vercel.app/api/v1/writers/${param?.writerId}`
+          `https://boi-binimoy-server-ashy.vercel.app/api/v1/writers/${param?.writerId}`
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -45,7 +45,7 @@ const WriterDetails = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `https://boi-binimoy-server.vercel.app/api/v1/writer/${writer?.writer_name}`
+          `https://boi-binimoy-server-ashy.vercel.app/api/v1/writer/${writer?.writer_name}`
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -71,7 +71,7 @@ const WriterDetails = () => {
           writer: [...interest.writer, writerName] // Merge the new writerName with existing writerNames
         };
 
-        const response = await fetch(`https://boi-binimoy-server.vercel.app/api/v1/users-interest/${email}`, {
+        const response = await fetch(`https://boi-binimoy-server-ashy.vercel.app/api/v1/users-interest/${email}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json'

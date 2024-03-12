@@ -4,7 +4,7 @@ import Link from "next/link";
 const CardBgColors = ["#EB5757", "#A4E0EB", "#EDB9D6", "#FDCA95", "#CBB5E2"];
 
 const SuggestedCard = ({ cardInfo, index }) => {
-  const colorIndex = index % CardBgColors.length;
+  const colorIndex = index % CardBgColors?.length;
 
   return (
     <div className="pb-16">
@@ -28,9 +28,9 @@ const SuggestedCard = ({ cardInfo, index }) => {
         <div className="px-4 md:px-10 text-white">
           {/* Book title */}
           <div title={cardInfo?.title} className="font-semibold text-lg cursor-pointer">
-            {cardInfo?.title.length < 27
+            {cardInfo?.title?.length < 27
               ? cardInfo?.title
-              : `${cardInfo?.title.slice(0, 27)}..`}
+              : `${cardInfo?.title?.slice(0, 27)}..`}
           </div>
           {/* Author Name */}
           <div className="book-author text-sm">by {cardInfo?.writer}</div>

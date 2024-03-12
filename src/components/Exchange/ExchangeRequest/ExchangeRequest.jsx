@@ -19,7 +19,7 @@ const ExchangeRequest = () => {
     const axiosSecure = useAxiosSecure();
 
     useEffect(() => {
-        axios.get(`https://boi-binimoy-server.vercel.app/api/v1/exchange-books/${param?.exchangeId}`)
+        axios.get(`https://boi-binimoy-server-ashy.vercel.app/api/v1/exchange-books/${param?.exchangeId}`)
             .then(function (response) {
                 // handle success
                 setBook(response.data);
@@ -35,7 +35,7 @@ const ExchangeRequest = () => {
 
     useEffect(() => {
         const email = localStorage.getItem("email")
-        axios.get(`https://boi-binimoy-server.vercel.app/api/v1/exchange-books-individual/${email}`)
+        axios.get(`https://boi-binimoy-server-ashy.vercel.app/api/v1/exchange-books-individual/${email}`)
             .then(function (response) {
                 // handle success
                 setBookByEmail(response.data)

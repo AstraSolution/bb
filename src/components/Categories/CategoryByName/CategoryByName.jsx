@@ -19,7 +19,7 @@ const CategoryByName = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`https://boi-binimoy-server.vercel.app/api/v1/category/${param?.categoryName}`);
+                const response = await fetch(`https://boi-binimoy-server-ashy.vercel.app/api/v1/category/${param?.categoryName}`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -45,7 +45,7 @@ const CategoryByName = () => {
                     category: [...interest.category, category] // Merge the new category with existing categories
                 };
 
-                const response = await fetch(`https://boi-binimoy-server.vercel.app/api/v1/users-interest/${email}`, {
+                const response = await fetch(`https://boi-binimoy-server-ashy.vercel.app/api/v1/users-interest/${email}`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json'

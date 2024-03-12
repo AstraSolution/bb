@@ -11,7 +11,7 @@ const useWishListBook = () => {
   const fetchData = async () => {
     try {
         const email = localStorage.getItem("email");
-        const res = await axiosSecure.get(`https://boi-binimoy-server.vercel.app/api/v1/wishlist/${email}`);
+        const res = await axiosSecure.get(`https://boi-binimoy-server-ashy.vercel.app/api/v1/wishlist/${email}`);
         return res.data;
      
     } catch (error) {
