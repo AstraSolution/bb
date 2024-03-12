@@ -21,7 +21,7 @@ const PublisherDetails = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `https://boi-binimoy-server.vercel.app/api/v1/publishers/${param?.publisherId}`
+          `https://boi-binimoy-server-ashy.vercel.app/api/v1/publishers/${param?.publisherId}`
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -42,7 +42,7 @@ const PublisherDetails = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `https://boi-binimoy-server.vercel.app/api/v1/publisher/${publisher?.publisher}`
+          `https://boi-binimoy-server-ashy.vercel.app/api/v1/publisher/${publisher?.publisher}`
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -69,7 +69,7 @@ const PublisherDetails = () => {
           publisher: [...interest.publisher, publisherName] // Merge the new publisherId with existing publisherIds
         };
 
-        const response = await fetch(`https://boi-binimoy-server.vercel.app/api/v1/users-interest/${email}`, {
+        const response = await fetch(`https://boi-binimoy-server-ashy.vercel.app/api/v1/users-interest/${email}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json'

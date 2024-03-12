@@ -71,5 +71,5 @@
   "resolutions": {
     "update-notifier": "5.1.0"
   },
-  "proxy": "https://boi-binimoy-server.vercel.app/"
+  "proxy": "https://boi-binimoy-server-ashy.vercel.app/"
 }

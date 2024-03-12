@@ -12,7 +12,7 @@ const useAdmin = () => {
     enabled: !loading,
     queryFn: async () => {
       const res = await axios.get(
-        `https://boi-binimoy-server.vercel.app/api/v1/users/${user?.email}`
+        `https://boi-binimoy-server-ashy.vercel.app/api/v1/users/${user?.email}`
       );
       return res.data?.admin;
     },
