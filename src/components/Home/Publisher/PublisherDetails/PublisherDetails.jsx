@@ -7,57 +7,77 @@ import BookCard from "../../../Shared/BookCard";
 import { AuthContext } from '@/providers/AuthProvider';
 import PageLoading from '@/components/Shared/loadingPageBook/PageLoading';
 import useOneUser from "@/Hooks/Users/useOneUser";
+import { useQuery } from "@tanstack/react-query";
+import useAxiosPublic from "@/Hooks/Axios/useAxiosPublic";
 
 const PublisherDetails = () => {
-
   const { user } = useContext(AuthContext);
+  const userEmail = localStorage?.email;
   const { interest } = useOneUser()
   const param = useParams();
-  const [publisher, setPublisher] = useState([]);
+  // const [publisher, setPublisher] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [books, setBooks] = useState([]);
+  // const [books, setBooks] = useState([]);
+  const axiosPublic = useAxiosPublic();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `https://boi-binimoy-server.vercel.app/api/v1/publishers/${param?.publisherId}`
-        );
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const result = await response.json();
-        setPublisher(result);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const { data: publisher = [], isLoading} = useQuery({
+       queryKey : ["publisher"],
+       queryFn: async() => {
+        const res = await axiosPublic.get(`api/v1/publishers/${param?.publisherId}`);
+        return res.data
+       }
+  })
 
-    fetchData();
-  }, [param?.publisherId]);
+  const { data: books = []} = useQuery({
+    queryKey: ["publisherBooks"],
+    queryFn: async() => {
+      const res = await axiosPublic.get(`/api/v1/publisher/${publisher?.publisher}`)
+    }
+  })
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `https://boi-binimoy-server.vercel.app/api/v1/publisher/${publisher?.publisher}`
-        );
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const result = await response.json();
-        setBooks(result);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  
 
-    fetchData();
-  }, [publisher?.publisher]);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         `https://boi-binimoy-server.vercel.app/api/v1/publishers/${param?.publisherId}`
+  //       );
+  //       if (!response.ok) {
+  //         throw new Error("Network response was not ok");
+  //       }
+  //       const result = await response.json();
+  //       setPublisher(result);
+  //     } catch (error) {
+  //       console.log(error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, [param?.publisherId]);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         `https://boi-binimoy-server.vercel.app/api/v1/publisher/${publisher?.publisher}`
+  //       );
+  //       if (!response.ok) {
+  //         throw new Error("Network response was not ok");
+  //       }
+  //       const result = await response.json();
+  //       setBooks(result);
+  //     } catch (error) {
+  //       console.log(error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, [publisher?.publisher]);
 
 
   const updateUserInterest = useCallback(async (email, publisherName) => {
@@ -86,14 +106,14 @@ const PublisherDetails = () => {
   }, [interest]);
 
   useEffect(() => {
-    if (user) {
+   
       // Update user interest in the database
-      updateUserInterest(user.email, publisher?.publisher);
-    }
-  }, [user, publisher?.publisher, updateUserInterest]);
+      updateUserInterest(userEmail, publisher?.publisher);
+   
+  }, [ publisher?.publisher, updateUserInterest, userEmail]);
 
 
-  if (loading) {
+  if (isLoading) {
     return <div className='bg-50-50'><PageLoading /></div>;
   }
 

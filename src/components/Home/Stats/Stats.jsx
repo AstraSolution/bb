@@ -23,8 +23,15 @@ const Stats = () => {
     },
   });
 
-  // order All data 
-  const { sellerOrders } = useSellerOrders();
+  // total sell
+  const { data: totalSold} = useQuery({
+    queryKey: ["totalSold"],
+    queryFn: async() => {
+      const res = await axiosPublic.get("/api/v1/total-orders");
+      return res.data?.totalBooksSold
+    }
+  })
+  
 
 
   //  exchange All book 
@@ -75,7 +82,7 @@ const Stats = () => {
           <div className="text-center md:border-r">
             <div className="flex items-center justify-center gap-2">
               <h6 className="text-3xl font-bold lg:text-4xl xl:text-5xl">
-                {isVisible && <CountUp end={sellerOrders?.length} duration={2} />}
+                {isVisible && <CountUp end={totalSold} duration={2} />}
               </h6>
               <span className="text-lg md:text-3xl lg:text-5xl">+</span>
             </div>

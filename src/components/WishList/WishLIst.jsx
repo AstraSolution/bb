@@ -20,7 +20,8 @@ const WishLIst = () => {
     const [wishListBook, refetch, isLoading] = useWishListBook();
     const axiosSecure = useAxiosSecure();
     const { currentUser } = useOneUser();
-    const { refetch: cartRefetch } = useGetMyCarts()
+    const { refetch: cartRefetch } = useGetMyCarts();
+    const email = localStorage.getItem("email");
 
     const handleBookDelete = (id, title) => {
         Swal.fire({
@@ -88,7 +89,7 @@ const WishLIst = () => {
         };
 
         axiosSecure
-            .post("/api/v1/carts", addCart)
+            .post(`/api/v1/carts?email=${email}`, addCart)
             .then((response) => {
                 if (response.status === 200) {
                     Swal.fire({

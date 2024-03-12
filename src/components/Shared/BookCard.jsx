@@ -26,6 +26,7 @@ export default function ExchangeCard({ item }) {
   const { currentUser } = useOneUser();
   const { refetch: cartRefetch } = useGetMyCarts();
   const [wishListBook, refetch] = useWishListBook();
+  const email = localStorage.getItem("email");
 
   const filteredData = wishListBook.filter((book) => book.book_id === _id);
 
@@ -87,7 +88,6 @@ export default function ExchangeCard({ item }) {
 
   // Handle add to cart
   const handleCart = () => {
-
     if (!isLoggedIn) {
       Swal.fire({
         icon: 'info',
@@ -125,7 +125,7 @@ export default function ExchangeCard({ item }) {
     };
 
     axiosSecure
-      .post("/api/v1/carts", addCart)
+      .post(`/api/v1/carts?email=${email}`, addCart)
       .then((response) => {
         if (response.status === 200) {
           Swal.fire({

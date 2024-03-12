@@ -20,12 +20,11 @@ import useGetMyCarts from "@/Hooks/Carts/useGetMyCarts";
 import RelatedBooks from "../RelatedBooks/RelatedBooks";
 
 const BuyBookDetails = () => {
-  const { user } = useAuth();
-  const { interest } = useOneUser();
   const param = useParams();
   const book_id = param.buyId;
   const axiosSecure = useAxiosSecure();
   const { currentUser } = useOneUser();
+  const email = localStorage.getItem("email");
   const { reviews, isPending, refetch } = useReviews(book_id);
   const {
     book,
@@ -100,7 +99,7 @@ const BuyBookDetails = () => {
     };
 
     axiosSecure
-      .post("/api/v1/carts", addCart)
+      .post(`/api/v1/carts?email=${email}`, addCart)
       .then((response) => {
         Swal.fire({
           position: "top-end",
