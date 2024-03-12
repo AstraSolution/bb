@@ -1,3 +1,5 @@
+"use client"
+
 import { useCallback, useContext, useEffect, useState } from 'react';
 import useOneUser from '../Users/useOneUser';
 import { useQuery } from "@tanstack/react-query";
@@ -5,13 +7,22 @@ import useAxiosPublic from '../Axios/useAxiosPublic';
 import { AuthContext } from '@/providers/AuthProvider';
 
 const useBookSuggestion = (CurrentlyViewing) => {
+    const CACHE_KEY_CATEGORY_DETAILS = 'categoryDetailsCache';
+    const CACHE_KEY_WRITERS_BOOKS = 'writersBooksCache';
+    const CACHE_KEY_PUBLISHER_BOOKS = 'publisherBooksCache';
+    const CACHE_KEY_INTERESTED_BOOKS = 'interestedBooksCache';
+    const CACHE_KEY_TOP_SELLING_BOOKS = 'topSellingBooksCache';
+    const CACHE_EXPIRATION_TIME = 10 * 60 * 1000;
+
     const { isLoggedIn, loading: userLoading } = useContext(AuthContext);
     const { interest, isLoading: interestLoading } = useOneUser();
     const axiosPublic = useAxiosPublic();
+
     const [booksFromCategory, setBooksFromCategory] = useState([]);
     const [booksFromWriters, setBooksFromWriters] = useState([]);
     const [booksFromPublishers, setBooksFromPublishers] = useState([]);
     const [interestedBooks, setInterestedBooks] = useState([]);
+    const [topSellingBooks, setTopSellingBooks] = useState([]);
     const [relatedBooksLoading, setRelatedBooksLoading] = useState(false);
     const [interestedBooksRelatedBooks, setInterestedBooksRelatedBooks] = useState([]);
     const [interestedBooksRelatedBooksLoading, setInterestedBooksRelatedBooksLoading] = useState(true);
@@ -25,10 +36,43 @@ const useBookSuggestion = (CurrentlyViewing) => {
 
     // ----------------Category Books----------------
 
-    const { data: categoryDetails = [], isLoading: categoryDetailsLoading } = useQuery({
+
+    // Function to retrieve cached data from localStorage
+    const getCachedData = (CACHE_KEY) => {
+        if (typeof window !== 'undefined') {
+            const cachedData = localStorage.getItem(CACHE_KEY);
+            if (cachedData) {
+                const { data, timestamp } = JSON.parse(cachedData);
+                if (Date.now() - timestamp < CACHE_EXPIRATION_TIME) {
+                    return data;
+                } else {
+                    localStorage.removeItem(CACHE_KEY); // Remove expired cache
+                }
+            }
+        }
+        return null;
+    };
+
+    // Function to save data to localStorage
+    const cacheData = (CACHE_KEY, data) => {
+        if (typeof window !== 'undefined') {
+            const cacheObject = {
+                data: data,
+                timestamp: Date.now()
+            };
+            localStorage.setItem(CACHE_KEY, JSON.stringify(cacheObject));
+        }
+    };
+
+    const { data: categoryDetails = getCachedData(CACHE_KEY_CATEGORY_DETAILS), isLoading: categoryDetailsLoading } = useQuery({
         queryKey: ['categoryDetails', interest?.category],
         queryFn: async () => {
             if (isLoggedIn && interest?.category && interest?.category?.length > 0 && userLoading === false && interestLoading === false) {
+                const cachedData = getCachedData(CACHE_KEY_CATEGORY_DETAILS); // Pass the CACHE_KEY
+                if (cachedData) {
+                    return cachedData;
+                }
+
                 const categoryDetailsPromises = interest.category.map(async (categoryName) => {
                     try {
                         const response = await axiosPublic.get(`/api/v1/category/${categoryName}`);
@@ -42,12 +86,14 @@ const useBookSuggestion = (CurrentlyViewing) => {
                     }
                 });
                 const categories = await Promise.all(categoryDetailsPromises);
-                return categories.filter(category => category !== null).flatMap(category => category);
+                const filteredCategories = categories.filter(category => category !== null).flatMap(category => category);
+                cacheData(CACHE_KEY_CATEGORY_DETAILS, filteredCategories); // Cache the fetched data with CACHE_KEY
+                return filteredCategories;
             } else {
                 return [];
             }
         },
-    });
+    })
 
     useEffect(() => {
         if (!categoryDetailsLoading && interest) {
@@ -58,10 +104,42 @@ const useBookSuggestion = (CurrentlyViewing) => {
 
     // ----------------Writers Books----------------
 
-    const { data: writersBooks = [], isLoading: writersBooksLoading } = useQuery({
+    // Function to retrieve cached writer books data from localStorage
+    const getCachedWritersBooks = () => {
+        if (typeof window !== 'undefined') {
+            const cachedData = localStorage.getItem(CACHE_KEY_WRITERS_BOOKS);
+            if (cachedData) {
+                const { data, timestamp } = JSON.parse(cachedData);
+                if (Date.now() - timestamp < CACHE_EXPIRATION_TIME) {
+                    return data;
+                } else {
+                    localStorage.removeItem(CACHE_KEY_WRITERS_BOOKS); // Remove expired cache
+                }
+            }
+        }
+        return null;
+    };
+
+    // Function to save writer books data to localStorage
+    const cacheWritersBooks = (data) => {
+        if (typeof window !== 'undefined') {
+            const cacheObject = {
+                data: data,
+                timestamp: Date.now()
+            };
+            localStorage.setItem(CACHE_KEY_WRITERS_BOOKS, JSON.stringify(cacheObject));
+        }
+    };
+
+    const { data: writersBooks = getCachedWritersBooks(), isLoading: writersBooksLoading } = useQuery({
         queryKey: ['writersBooks', interest?.writer],
         queryFn: async () => {
             if (isLoggedIn && interest?.writer && interest?.writer?.length > 0 && userLoading === false && interestLoading === false) {
+                const cachedData = getCachedWritersBooks();
+                if (cachedData) {
+                    return cachedData;
+                }
+
                 const writersBooksPromises = interest.writer.map(async (writerName) => {
                     try {
                         const response = await axiosPublic.get(`/api/v1/writer/${writerName}`);
@@ -75,12 +153,15 @@ const useBookSuggestion = (CurrentlyViewing) => {
                     }
                 });
                 const writers = await Promise.all(writersBooksPromises);
-                return writers?.filter(writer => writer !== null).flatMap(writer => writer);
+                const filteredWriters = writers.filter(writer => writer !== null).flatMap(writer => writer);
+                cacheWritersBooks(filteredWriters); // Cache the fetched data
+                return filteredWriters;
             } else {
                 return [];
             }
         },
     });
+
 
     useEffect(() => {
         if (!writersBooksLoading && interest) {
@@ -91,10 +172,44 @@ const useBookSuggestion = (CurrentlyViewing) => {
 
     // ----------------Publishers Books----------------
 
-    const { data: publisherBooks = [], isLoading: publisherBooksLoading } = useQuery({
+
+    // Function to retrieve cached publisher books data from localStorage
+    const getCachedPublisherBooks = () => {
+        if (typeof window !== 'undefined') {
+            const cachedData = localStorage.getItem(CACHE_KEY_PUBLISHER_BOOKS);
+            if (cachedData) {
+                const { data, timestamp } = JSON.parse(cachedData);
+                if (Date.now() - timestamp < CACHE_EXPIRATION_TIME) {
+                    return data;
+                } else {
+                    localStorage.removeItem(CACHE_KEY_PUBLISHER_BOOKS); // Remove expired cache
+                }
+            }
+        }
+        return null;
+    };
+
+    // Function to save publisher books data to localStorage
+    const cachePublisherBooks = (data) => {
+        if (typeof window !== 'undefined') {
+            const cacheObject = {
+                data: data,
+                timestamp: Date.now()
+            };
+            localStorage.setItem(CACHE_KEY_PUBLISHER_BOOKS, JSON.stringify(cacheObject));
+        }
+    };
+
+
+    const { data: publisherBooks = getCachedPublisherBooks(), isLoading: publisherBooksLoading } = useQuery({
         queryKey: ['publisherBooks', interest?.publisher],
         queryFn: async () => {
             if (isLoggedIn && interest?.publisher && interest?.publisher?.length > 0 && userLoading === false && interestLoading === false) {
+                const cachedData = getCachedPublisherBooks();
+                if (cachedData) {
+                    return cachedData;
+                }
+
                 const publisherBooksPromises = interest.publisher.map(async (publisherName) => {
                     try {
                         const response = await axiosPublic.get(`/api/v1/publisher/${publisherName}`);
@@ -108,12 +223,15 @@ const useBookSuggestion = (CurrentlyViewing) => {
                     }
                 });
                 const publishers = await Promise.all(publisherBooksPromises);
-                return publishers?.filter(publisher => publisher !== null).flatMap(publisher => publisher);
+                const filteredPublishers = publishers.filter(publisher => publisher !== null).flatMap(publisher => publisher);
+                cachePublisherBooks(filteredPublishers); // Cache the fetched data
+                return filteredPublishers;
             } else {
                 return [];
             }
         },
     });
+
 
     useEffect(() => {
         if (!publisherBooksLoading && interest) {
@@ -124,10 +242,43 @@ const useBookSuggestion = (CurrentlyViewing) => {
 
     // ----------------Interested books----------------
 
-    const { data: bookDetails = [], isLoading: booksLoading } = useQuery({
+    // Function to retrieve cached interested books data from localStorage
+    const getCachedInterestedBooks = () => {
+        if (typeof window !== 'undefined') {
+            const cachedData = localStorage.getItem(CACHE_KEY_INTERESTED_BOOKS);
+            if (cachedData) {
+                const { data, timestamp } = JSON.parse(cachedData);
+                if (Date.now() - timestamp < CACHE_EXPIRATION_TIME) {
+                    return data;
+                } else {
+                    localStorage.removeItem(CACHE_KEY_INTERESTED_BOOKS); // Remove expired cache
+                }
+            }
+        }
+        return null;
+    };
+
+    // Function to save interested books data to localStorage
+    const cacheInterestedBooks = (data) => {
+        if (typeof window !== 'undefined') {
+            const cacheObject = {
+                data: data,
+                timestamp: Date.now()
+            };
+            localStorage.setItem(CACHE_KEY_INTERESTED_BOOKS, JSON.stringify(cacheObject));
+        }
+    };
+
+
+    const { data: bookDetails = getCachedInterestedBooks(), isLoading: booksLoading } = useQuery({
         queryKey: ["bookDetails", interest?.book],
         queryFn: async () => {
             if (isLoggedIn && interest?.book && interest?.book?.length > 0 && userLoading === false && interestLoading === false) {
+                const cachedData = getCachedInterestedBooks();
+                if (cachedData) {
+                    return cachedData;
+                }
+
                 const bookDetailsPromises = interest.book.map(async (_id) => {
                     try {
                         const response = await axiosPublic.get(`/api/v1/buy-books/${_id}`);
@@ -141,7 +292,9 @@ const useBookSuggestion = (CurrentlyViewing) => {
                     }
                 });
                 const books = await Promise.all(bookDetailsPromises);
-                return books?.filter(book => book !== null);
+                const filteredBooks = books.filter(book => book !== null);
+                cacheInterestedBooks(filteredBooks); // Cache the fetched data
+                return filteredBooks;
             } else {
                 return [];
             }
@@ -258,28 +411,61 @@ const useBookSuggestion = (CurrentlyViewing) => {
 
     // ----------------top Selling Books----------------
 
-    const [topSellingBooks, setTopSellingBooks] = useState([]);
-    const [topSellingBooksLoading, setTopSellingBooksLoading] = useState(true);
+    // Function to retrieve cached top selling books data from localStorage
+    const getCachedTopSellingBooks = () => {
+        if (typeof window !== 'undefined') {
+            const cachedData = localStorage.getItem(CACHE_KEY_TOP_SELLING_BOOKS);
+            if (cachedData) {
+                const { data, timestamp } = JSON.parse(cachedData);
+                if (Date.now() - timestamp < CACHE_EXPIRATION_TIME) {
+                    return data;
+                } else {
+                    localStorage.removeItem(CACHE_KEY_TOP_SELLING_BOOKS); // Remove expired cache
+                }
+            }
+        }
+        return null;
+    };
 
-    useQuery({
+    // Function to save top selling books data to localStorage
+    const cacheTopSellingBooks = (data) => {
+        if (typeof window !== 'undefined') {
+            const cacheObject = {
+                data: data,
+                timestamp: Date.now()
+            };
+            localStorage.setItem(CACHE_KEY_TOP_SELLING_BOOKS, JSON.stringify(cacheObject));
+        }
+    };
+
+
+    const { data: topSellingBooksData, isLoading: topSellingBooksLoading } = useQuery({
         queryKey: ["topSellingBooks"],
         queryFn: async () => {
+            const cachedData = getCachedTopSellingBooks();
+            if (cachedData) {
+                return cachedData;
+            }
+
             try {
                 const response = await axiosPublic.get(`/api/v1/top-selling-books`);
                 if (response.status !== 200) {
-                    throw new Error('Failed to fetch book details');
+                    throw new Error('Failed to fetch top selling books');
                 }
-                setTopSellingBooks(response?.data?.topSellingBooks);
-                setTopSellingBooksLoading(false);
-                return response?.data;
+                const topSellingBooksData = response?.data?.topSellingBooks;
+                cacheTopSellingBooks(topSellingBooksData); // Cache the fetched data
+                return topSellingBooksData;
             } catch (error) {
                 console.error(error);
-                setTopSellingBooksLoading(false);
                 return null;
             }
         },
     });
-
+    useEffect(() => {
+        if (!topSellingBooksLoading) {
+            setTopSellingBooks(topSellingBooksData);
+        }
+    }, [topSellingBooksData, topSellingBooksLoading]);
 
 
     // ----------------Top tier books----------------
