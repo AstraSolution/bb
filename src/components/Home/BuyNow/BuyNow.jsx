@@ -10,42 +10,37 @@ import Link from "next/link";
 import { FiArrowUpRight } from "react-icons/fi";
 import ComponentLoading from "@/components/Shared/loadingPageBook/ComponentLoading";
 import BookCardSkeleton from "@/components/Skeleton/BookCardSkeleton";
+import { useQuery } from "@tanstack/react-query";
+import useAxiosPublic from "@/Hooks/Axios/useAxiosPublic";
+
 
 SwiperCore.use([Navigation]);
 
 export default function BuyNow() {
   const [swiperInitialized, setSwiperInitialized] = useState(false);
   const [swiper, setSwiper] = useState(null);
-  const [books, setBooks] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const axiosPublic = useAxiosPublic();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          "https://boi-binimoy-server.vercel.app/api/v1/buy-books"
-        );
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const result = await response.json();
+  const { data: bookData = [], isLoading: loading } = useQuery({
+    queryKey: ["books"],
+    queryFn: async () => {
+      const res = await axiosPublic.get(`api/v1/buy-books`);
+      return res.data;
+    },
+  });
 
-        // Fisher-Yates Shuffle Algorithm
-        const shuffledBooks = result.buyBooks.slice();
-        for (let i = shuffledBooks.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [shuffledBooks[i], shuffledBooks[j]] = [shuffledBooks[j], shuffledBooks[i]];
-        }
 
-        setBooks(shuffledBooks.slice(0, 12));
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+  console.log(bookData)
+
+  // Fisher-Yates Shuffle Algorithm
+  const shuffledBooks = bookData?.buyBooks?.slice();
+  for (let i = shuffledBooks?.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledBooks[i], shuffledBooks[j]] = [shuffledBooks[j], shuffledBooks[i]];
+  }
+
+  const books = shuffledBooks?.slice(0, 12);
+
 
 
   const handleNextButtonClick = () => {

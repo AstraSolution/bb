@@ -67,6 +67,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
     const { data: categoryDetails = getCachedData(CACHE_KEY_CATEGORY_DETAILS), isLoading: categoryDetailsLoading } = useQuery({
         queryKey: ['categoryDetails', interest?.category],
         queryFn: async () => {
+            console.log('fetiching')
             if (isLoggedIn && interest?.category && interest?.category?.length > 0 && userLoading === false && interestLoading === false) {
                 const cachedData = getCachedData(CACHE_KEY_CATEGORY_DETAILS); // Pass the CACHE_KEY
                 if (cachedData) {
@@ -171,7 +172,6 @@ const useBookSuggestion = (CurrentlyViewing) => {
 
 
     // ----------------Publishers Books----------------
-
 
     // Function to retrieve cached publisher books data from localStorage
     const getCachedPublisherBooks = () => {
@@ -383,30 +383,34 @@ const useBookSuggestion = (CurrentlyViewing) => {
         },
     });
 
+
     useEffect(() => {
-        if (currentlyViewingBookLoading) {
-            setCurrentlyViewingRelatedLoading(true)
-            return;
+        if (CurrentlyViewing) {
+            if (currentlyViewingBookLoading === true) {
+                setCurrentlyViewingRelatedLoading(true)
+                return;
+            }
+
+            if (currentlyViewingBookDetails) {
+                setCurrentlyViewingRelatedLoading(true)
+                const { writer, publisher, category } = currentlyViewingBookDetails;
+                const fetchRelatedBooksForCurrentlyViewing = async () => {
+                    try {
+                        const relatedBooksForCurrentlyViewing = await fetchRelatedBooks(writer, publisher, category);
+                        setCurrentlyViewingRelatedBooks(relatedBooksForCurrentlyViewing);
+                    } catch (error) {
+                        console.error("Error fetching related books for currently viewing book:", error);
+                        setCurrentlyViewingRelatedBooks([]);
+                    } finally {
+                        setCurrentlyViewingRelatedLoading(false);
+                    }
+                };
+
+                fetchRelatedBooksForCurrentlyViewing();
+            }
         }
 
-        if (currentlyViewingBookDetails) {
-            setCurrentlyViewingRelatedLoading(true)
-            const { writer, publisher, category } = currentlyViewingBookDetails;
-            const fetchRelatedBooksForCurrentlyViewing = async () => {
-                try {
-                    const relatedBooksForCurrentlyViewing = await fetchRelatedBooks(writer, publisher, category);
-                    setCurrentlyViewingRelatedBooks(relatedBooksForCurrentlyViewing);
-                } catch (error) {
-                    console.error("Error fetching related books for currently viewing book:", error);
-                    setCurrentlyViewingRelatedBooks([]);
-                } finally {
-                    setCurrentlyViewingRelatedLoading(false);
-                }
-            };
-
-            fetchRelatedBooksForCurrentlyViewing();
-        }
-    }, [currentlyViewingBookDetails, currentlyViewingBookLoading, fetchRelatedBooks]);
+    }, [currentlyViewingBookDetails, currentlyViewingBookLoading, CurrentlyViewing, fetchRelatedBooks]);
 
 
     // ----------------top Selling Books----------------
@@ -521,7 +525,6 @@ const useBookSuggestion = (CurrentlyViewing) => {
                     filteredBooks.push(book);
                 }
             });
-
 
             const transformedTopSellingBooks = Array.isArray(topSellingBooks) ? topSellingBooks.map(item => {
                 return {
