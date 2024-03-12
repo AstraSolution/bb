@@ -29,9 +29,6 @@ export default function BuyNow() {
     },
   });
 
-
-  console.log(bookData)
-
   // Fisher-Yates Shuffle Algorithm
   const shuffledBooks = bookData?.buyBooks?.slice();
   for (let i = shuffledBooks?.length - 1; i > 0; i--) {
