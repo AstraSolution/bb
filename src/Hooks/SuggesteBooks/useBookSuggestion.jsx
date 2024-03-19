@@ -12,7 +12,7 @@ const useBookSuggestion = (CurrentlyViewing) => {
     const CACHE_KEY_PUBLISHER_BOOKS = 'publisherBooksCache';
     const CACHE_KEY_INTERESTED_BOOKS = 'interestedBooksCache';
     const CACHE_KEY_TOP_SELLING_BOOKS = 'topSellingBooksCache';
-    const CACHE_EXPIRATION_TIME = 30 * 60 * 1000;
+    const CACHE_EXPIRATION_TIME = 60 * 60 * 1000; 
 
     const { isLoggedIn, loading: userLoading } = useContext(AuthContext);
     const { interest, isLoading: interestLoading } = useOneUser();
