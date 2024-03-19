@@ -261,9 +261,9 @@ const TrackOrder = () => {
             </div> */}
             {/* traking end */}
 
-            <h5 className="text-lg font-bold">You orde has been delivader</h5>
+            <h5 className="text-lg font-bold">Your orde has been delivader</h5>
             <p className="text-xs">
-              Lorem ipsum dolor sit. You orde has been delivader
+              Dear user, Your orde has been delivader!
             </p>
           </div>
           {/* track you order section end */}
